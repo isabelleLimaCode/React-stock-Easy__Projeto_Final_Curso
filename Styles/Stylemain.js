@@ -24,7 +24,8 @@ export default StyleSheet.create({
 
     textinput:{
         color:'#fff',
-        top:30
+        top:30,
+        left:20,
     },  
 
 
@@ -93,7 +94,7 @@ export default StyleSheet.create({
        left:-15
     },
 
-    imag:{
+    imag7:{
         width:25,
        height:25,
        alignSelf:'flex-start',

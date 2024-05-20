@@ -12,7 +12,7 @@ import {
     ActivityIndicator,
     Alert
 } from 'react-native';
-import stylemain from '../../../Styles/Stylemain';
+import Stylemain from '../../../Styles/Stylemain';
 import { FontAwesome5 ,AntDesign} from '@expo/vector-icons';
 import {db,auth,app} from './../../../Services/Firebaseconfig';
 import {doc,getDoc,collection,query,where,getDocs} from 'firebase/firestore'
@@ -138,39 +138,39 @@ export default function Login({navigation,route}) {
     behavior={Platform.OS == "ios" ? "padding" : "height"}  style={{flex:1, backgroundColor:'#082854'}} >
        
       
-       <View style={stylemain.mainConteiner}>
+       <View style={Stylemain.mainConteiner}>
        <TouchableOpacity onPress={() => navigation.goBack()}>
             <AntDesign style={{left:10,marginTop:60}} name="back" size={24} color="black" />
           </TouchableOpacity>
        
-            <Image style= {stylemain.logo} source={require('./../../../assets/logo.gif')}/>
+            <Image style= {Stylemain.logo} source={require('./../../../assets/logo.gif')}/>
         
        </View>
    
-        <ScrollView style={stylemain.secondConteiner}>
+        <ScrollView style={Stylemain.secondConteiner}>
                   
             <View style={{backgroundColor:'#082854'}}>
 
-                <TouchableOpacity style={stylemain.btn2}>
-                        <Text style={stylemain.txt2}>Google</Text>
-                        <Image style= {stylemain.imag} source={require('./../../../assets/google.png')}/>
+                <TouchableOpacity style={Stylemain.btn2}>
+                        <Text style={Stylemain.txt2}>Google</Text>
+                        <Image style= {Stylemain.imag} source={require('./../../../assets/google.png')}/>
                 </TouchableOpacity>
                                                    
-                <Text style={stylemain.textinput}>    E-mail: </Text>
-                <TextInput style={stylemain.input} placeholder="Exemplo@gmail.com"  onChangeText={handlechangedataEmail}/> 
+                <Text style={Stylemain.textinput}>    E-mail: </Text>
+                <TextInput style={Stylemain.input} placeholder="Exemplo@gmail.com"  onChangeText={handlechangedataEmail}/> 
 
 
                        
-                <Text style={stylemain.textinput}>    Password: </Text>
+                <Text style={Stylemain.textinput}>    Password: </Text>
                 <TextInput secureTextEntry={!showPassword}  style={stylemain.input}  onChangeText={handlechangedatapass}/> 
                 
-               <TouchableOpacity onPress={togglePasswordVisibility} style={stylemain.eye}>
+               <TouchableOpacity onPress={togglePasswordVisibility} style={Stylemain.eye}>
                     <FontAwesome5 name={showPassword ? 'eye' : 'eye-slash'} size={20} color="black" />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[stylemain.btn,{top:30}]} onPress={checkdoc} >
-                    <Text style={stylemain.txt}>Iniciar Sessão</Text>
-                    <FontAwesome5 name="location-arrow" size={20} color="white" style={stylemain.seta} />
+                <TouchableOpacity style={[Stylemain.btn,{top:30}]} onPress={checkdoc} >
+                    <Text style={Stylemain.txt}>Iniciar Sessão</Text>
+                    <FontAwesome5 name="location-arrow" size={20} color="white" style={Stylemain.seta} />
                 </TouchableOpacity>
 
                 

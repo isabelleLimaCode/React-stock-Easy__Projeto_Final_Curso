@@ -11,12 +11,18 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
     "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-navigation/native": "^6.1.17",
+    "dayjs": "^1.11.11",
     "expo": "~51.0.8",
+    "expo-image-picker": "^15.0.5",
     "expo-status-bar": "~1.12.1",
     "f": "^1.4.0",
     "firebase": "^10.12.0",
+    "moment": "^2.30.1",
     "react": "18.2.0",
-    "react-native": "0.74.1"
+    "react-native": "0.74.1",
+    "react-native-modern-datepicker": "^1.0.0-beta.91",
+    "react-native-snap-carousel": "^3.9.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
