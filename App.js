@@ -5,11 +5,15 @@ import Main from './components/screen/Free_access/Main';
 import CreateAccountUser from './components/screen/Free_access/CreateAccountUser';
 import AtalhoBanco from './components/screen/Admin/AtalhoBanco';
 import Categoria from './components/screen/Admin/Categoria';
+import Categoria2 from './components/screen/Admin/Categoria2';
+import ChangeProduct from './components/screen/Admin/ChangeProduct';
+import CheckCarrinho from './components/screen/Admin/CheckCarrinho';
+import Cliente from './components/screen/Admin/Cliente';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Categoria/>
+      <Cliente/>
     </View>
   );
 }
