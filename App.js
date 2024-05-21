@@ -8,12 +8,16 @@ import EditarCliente from './components/screen/Admin/EditarCliente';
 import EditarConta from './components/screen/Admin/EditarConta';
 import Estatistica from './components/screen/Admin/Estatistica';
 import FinalizarEncomenda from './components/screen/Admin/FinalizarEncomenda';
+import FinalizarPreparo from './components/screen/Admin/FinalizarPreparo';
+import FinalizarVenda from './components/screen/Admin/FinalizarVenda';
+import Header from './components/screen/Admin/Header';
+import Home from './components/screen/Admin/home';
 
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <FinalizarEncomenda/>
+      <Home/>
     </View>
   );
 }
