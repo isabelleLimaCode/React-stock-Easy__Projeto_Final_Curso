@@ -25,7 +25,7 @@ export default StyleSheet.create({
     textinput:{
         color:'#fff',
         top:30,
-        left:20,
+        left:5,
     },  
 
 

@@ -1,18 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Concluido from './components/screen/Admin/Concluido';
-import ConcluidoProduto from './components/screen/Admin/ConcluidoProduto';
-import ConfirmarPagamento from './components/screen/Admin/ConfirmarPagament';
-import Conta from './components/screen/Admin/Conta';
-import CriarCatalogo from './components/screen/Admin/CriarCatalogo';
-import CriarCliente from './components/screen/Admin/CriarCliente';
+
 import CriarRelatorio from './components/screen/Admin/CriarRelatorio';
+import CriarVenda from './components/screen/Admin/CriarVenda';
+import Discont from './components/screen/Admin/Discont';
+import EditarCliente from './components/screen/Admin/EditarCliente';
+import EditarConta from './components/screen/Admin/EditarConta';
+import Estatistica from './components/screen/Admin/Estatistica';
+import FinalizarEncomenda from './components/screen/Admin/FinalizarEncomenda';
 
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <CriarRelatorio/>
+      <FinalizarEncomenda/>
     </View>
   );
 }
