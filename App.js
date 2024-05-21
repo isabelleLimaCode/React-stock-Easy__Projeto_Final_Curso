@@ -11,12 +11,18 @@ import Order from './components/screen/Admin/Order';
 import Pesquisa from './components/screen/Admin/Pesquisa';
 import PrepararEncomenda from './components/screen/Admin/PreparaEncomenda';
 import Produto from './components/screen/Admin/Produtos';
+import Promocao from './components/screen/Admin/Promoção';
+import Relatorio from './components/screen/Admin/Relatorio';
+import Scan from './components/screen/Admin/Scan';
+import Stock from './components/screen/Admin/Stock';
+import Vendas from './components/screen/Admin/Vendas';
+import VendasMarckplace from './components/screen/Admin/VendasMarckplace';
+import Chat from './components/screen/Admin/Support';
 
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Produto/>
     </View>
   );
 }
