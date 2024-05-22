@@ -5,8 +5,6 @@ import {
     ScrollView,
     KeyboardAvoidingView,
     Platform,
-    TextInput,
-    Keyboard,
     Modal,
     TouchableOpacity,
     Alert,

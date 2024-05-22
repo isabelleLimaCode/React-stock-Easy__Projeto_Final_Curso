@@ -50,7 +50,6 @@ export default function Conta({ navigation, props }) {
       
         if (!result.canceled) {
             setselectImage(result.assets[0].uri);
-            console.log(selecImage);
           }
       
         Setmodal2visibile(!Modal2visibile);

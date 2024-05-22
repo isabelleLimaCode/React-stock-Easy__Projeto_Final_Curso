@@ -32,6 +32,7 @@ import Produto from '../Admin/Produtos';
 import Promocao from '../Admin/Promoção';
 import Header from '../Admin/Header';
 import Discont from '../Admin/discont';
+import FinalizarVenda from '../Admin/FinalizarVenda';
 
 const Stack = createStackNavigator();
 
@@ -45,12 +46,17 @@ export function RoutesStack() {
       />
       <Stack.Screen
         options={{ headerShown: false }}
+        name="FinalizarVenda"
+        component={FinalizarVenda}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
         name="Login"
         component={Login}
       />
       <Stack.Screen
         options={{ headerShown: false }}
-        name="CreateAccountUser"
+        name="Criar conta"
         component={CreateAccountUser}
       />
       <Stack.Screen
@@ -60,26 +66,26 @@ export function RoutesStack() {
       />
       <Stack.Screen
         options={{ header: (props) => <Header {...props} /> }}
-        name="VendasMarckplace"
+        name="Vendas Marckplace"
         component={VendasMarckplace}
       />
       <Stack.Screen
         options={{ headerShown: false }}
-        name="MarckplaceEdit"
+        name="editvendas"
         component={MarckplaceEdit}
       />
       <Stack.Screen
         options={{ header: (props) => <Header {...props} /> }}
-        name="NewProduct"
+        name="CriarProduto"
         component={NewProduct}
       />
       <Stack.Screen
         options={{ headerShown: false }}
-        name="EditarCliente"
+        name="editcliente"
         component={EditarCliente}
       />
       <Stack.Screen
-        name="Discont"
+        name="addpromocao"
         component={Discont}
         options={{ header: (props) => <Header {...props} /> }}
       />
@@ -89,7 +95,7 @@ export function RoutesStack() {
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="Conta"
+        name="AreaCliente"
         component={Conta}
         options={{ header: (props) => <Header {...props} /> }}
       />
@@ -99,37 +105,37 @@ export function RoutesStack() {
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="PrepararEncomenda"
+        name="prepararEncomenda"
         component={PrepararEncomenda}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="FinalizarPreparo"
+        name="FinalizarEncomenda"
         component={FinalizarPreparo}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="Estatistica"
+        name="estatistica"
         component={Estatistica}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="CheckCarrinho"
+        name="carrinho"
         component={CheckCarrinho}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="CriarCatalogo"
+        name="catalogo"
         component={CriarCatalogo}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="ConfirmarPagamento"
+        name="confirmarPagamento"
         component={ConfirmarPagamento}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="ChangeProduct"
+        name="EditarProduto"
         component={ChangeProduct}
         options={{ header: (props) => <Header {...props} /> }}
       />
@@ -149,47 +155,42 @@ export function RoutesStack() {
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="MetodoEnvio"
+        name="MetodoPagamento"
         component={MetodoEnvio}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="FinalizarEncomenda"
-        component={FinalizarEncomenda}
-        options={{ header: (props) => <Header {...props} /> }}
-      />
-      <Stack.Screen
-        name="Concluido"
+        name="ConcluirVenda"
         component={Concluido}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="Order"
+        name="visualizarEncomenda"
         component={Order}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="ConcluidoProduto"
+        name="RegistrarProduto"
         component={ConcluidoProduto}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="Categoria"
+        name="caterogia"
         component={Categoria}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="Categoria2"
+        name="nextcategory"
         component={Categoria2}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="Produto"
+        name="produto"
         component={Produto}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
-        name="Promocao"
+        name="promoção"
         component={Promocao}
         options={{ header: (props) => <Header {...props} /> }}
       />
