@@ -13,7 +13,7 @@ import { Ionicons,Feather,FontAwesome5} from '@expo/vector-icons';
 import StyleCardStock from '../../../Styles/StyleCardStock';
 export default function Teste({onpress1,onpress2,valor,nome,quant,image,changeColor,changeshadowColor}) {
 
-    const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
+    //const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
     const [Changenumber, setChangenumber] = useState(0);
     const [quantidade, setquantidade] = useState(0);
     const numero = 1;
@@ -59,7 +59,7 @@ export default function Teste({onpress1,onpress2,valor,nome,quant,image,changeCo
 
   
   return (
-    <KeyboardAvoidingView behavior={behavior} style={{ flex: 1 , backgroundColor:'#fff'}}>
+    <KeyboardAvoidingView  style={{ flex: 1 , backgroundColor:'#fff'}}>
 
     <View style= {{alignSelf:'center',marginTop:10,marginBottom:10}}>
         <View style={[StyleCardStock.conteiner,{shadowColor: changeshadowColor ? changeshadowColor : '#000' }]}>

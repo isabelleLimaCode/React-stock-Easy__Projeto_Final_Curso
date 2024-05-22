@@ -8,7 +8,7 @@ import {
     Platform,
     SafeAreaView,
     FlatList,
-    TouchableOpacity
+    TouchableOpacity,
     
 } from 'react-native';
 import StyleCardObj from '../../../Styles/StyleCardObj';
@@ -22,7 +22,6 @@ import { getDoc,doc, collection, getDocs } from 'firebase/firestore';
 
 export default function CriarVenda({navigation,route}) {
 
-  const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
   const [searchPhrase, setSearchPhrase] = useState("");
   const [searchPhrase2, setSearchPhrase2] = useState("");
   const [clicked, setClicked] = useState(false);
@@ -235,7 +234,7 @@ export default function CriarVenda({navigation,route}) {
 
 
   return (
-    <KeyboardAvoidingView behavior={behavior} style={{ flex: 1, backgroundColor:'#fff' }}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor:'#fff' }}>
      <View>
         <Text style={[StyleCardObj.text2,{}]}>Criar Venda</Text>
     </View>

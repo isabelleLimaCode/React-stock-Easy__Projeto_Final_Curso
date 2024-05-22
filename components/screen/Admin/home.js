@@ -3,8 +3,7 @@ import {
     Text, 
     View,
     Image,
-    ScrollView,
-    FlatList
+    FlatList,
 } from 'react-native';
 import StyleHome from '../../../Styles/StyleHome';
 import { Ionicons ,FontAwesome,Feather,Fontisto,MaterialCommunityIcons} from '@expo/vector-icons';

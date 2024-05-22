@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import Stylemain from '../../../Styles/Stylemain';
 import { FontAwesome5 ,AntDesign} from '@expo/vector-icons';
-import {db,auth,app} from './../../../Services/Firebaseconfig';
+import {db,auth,app} from '../../../Services/Firebaseconfig';
 import {doc,getDoc,collection,query,where,getDocs} from 'firebase/firestore'
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 
@@ -153,7 +153,7 @@ export default function Login({navigation,route}) {
 
                 <TouchableOpacity style={Stylemain.btn2}>
                         <Text style={Stylemain.txt2}>Google</Text>
-                        <Image style= {Stylemain.imag} source={require('./../../../assets/google.png')}/>
+                        <Image style= {Stylemain.imag7} source={require('./../../../assets/google.png')}/>
                 </TouchableOpacity>
                                                    
                 <Text style={Stylemain.textinput}>    E-mail: </Text>
@@ -162,7 +162,7 @@ export default function Login({navigation,route}) {
 
                        
                 <Text style={Stylemain.textinput}>    Password: </Text>
-                <TextInput secureTextEntry={!showPassword}  style={stylemain.input}  onChangeText={handlechangedatapass}/> 
+                <TextInput secureTextEntry={!showPassword}  style={Stylemain.input}  onChangeText={handlechangedatapass}/> 
                 
                <TouchableOpacity onPress={togglePasswordVisibility} style={Stylemain.eye}>
                     <FontAwesome5 name={showPassword ? 'eye' : 'eye-slash'} size={20} color="black" />

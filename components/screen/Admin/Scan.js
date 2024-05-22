@@ -2,16 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { 
     Text, 
     View,
-    TouchableOpacity,
-    KeyboardAvoidingView,
-    Platform,
-    Dimensions,
     StyleSheet,
-    TouchableWithoutFeedback,
-    Modal,
     Button,
     Alert,
-    FlatList
     
 } from 'react-native';
 

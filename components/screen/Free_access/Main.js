@@ -30,12 +30,12 @@ export default function Main({navigation}) {
                     
             <View style={{backgroundColor:'#082854'}}>
                                                    
-            <TouchableOpacity style={[Stylemain.btn,{top:40}]} onPress={() => navigation.navigate('login')}>
+            <TouchableOpacity style={[Stylemain.btn,{top:40}]} onPress={() => navigation.navigate('Login')}>
                 <Text style={Stylemain.txt}> Entrar </Text>
                 <FontAwesome5 name="location-arrow" size={20} color="white" style={Stylemain.seta} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={[Stylemain.btn,{top:40}]} onPress={() => navigation.navigate('Main')} >
+            <TouchableOpacity style={[Stylemain.btn,{top:40,marginTop:10}]} onPress={() => navigation.navigate('Main')} >
                 <Text style={Stylemain.txt}> Criar Conta </Text>
                 <FontAwesome5 name="location-arrow" size={20} color="white" style={Stylemain.seta} />
             </TouchableOpacity>

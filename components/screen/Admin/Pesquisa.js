@@ -7,7 +7,6 @@ import {
     ScrollView,
     SafeAreaView,
     FlatList,
-    Platform,
 } from 'react-native';
 import StyleCardObj from '../../../Styles/StyleCardObj';
 import SearchBar from '../SearchBar/SearchBar';
@@ -16,7 +15,7 @@ import { db, auth} from '../../../Services/Firebaseconfig';
 import { doc, getDoc } from 'firebase/firestore';
 export default function Pesquisa({navigation}) {
 
-    const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
+    //const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
     const [searchPhrase, setSearchPhrasse] = useState("");
     const [clicked, setClicked] = useState(false);
     const [data1,setdata1] = useState();
@@ -57,7 +56,7 @@ export default function Pesquisa({navigation}) {
       setFilteredData(filtered);
     };
   return (
-    <KeyboardAvoidingView behavior={behavior} style={{ flex: 1 , backgroundColor:'#fff'}}>
+    <KeyboardAvoidingView  style={{ flex: 1 , backgroundColor:'#fff'}}>
     
      <View>
 

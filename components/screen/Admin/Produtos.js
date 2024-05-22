@@ -8,7 +8,6 @@ import {
     FlatList,
     Alert,
     RefreshControl,
-    Platform
 } from 'react-native';
 import StyleCardObj from '../../../Styles/StyleCardObj';
 import SearchBar from '../SearchBar/SearchBar';
@@ -19,7 +18,7 @@ import { db, auth} from '../../../Services/Firebaseconfig';
 import { doc, getDoc } from 'firebase/firestore';
 export default function Produto({navigation}) {
 
-    const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
+    //const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
     const [searchPhrase, setSearchPhrasse] = useState("");
     const [clicked, setClicked] = useState(false);
     const [data1,setdata1] = useState();
