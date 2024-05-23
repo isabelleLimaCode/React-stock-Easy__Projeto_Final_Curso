@@ -42,7 +42,7 @@ const Header = ({navigation}) => {
                   marginLeft:130
               }} source={require('../../../assets/user.jpg')}/>
             </TouchableOpacity>
-          <TouchableOpacity >
+          <TouchableOpacity  onPress={() => navigation.navigate('objetivo')} >
              <Image style={{
                width:30,
                height:30,

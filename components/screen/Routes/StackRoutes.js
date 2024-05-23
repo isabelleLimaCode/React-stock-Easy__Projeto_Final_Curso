@@ -33,6 +33,7 @@ import Promocao from '../Admin/Promoção';
 import Header from '../Admin/Header';
 import Discont from '../Admin/Discont';
 import FinalizarVenda from '../Admin/FinalizarVenda';
+import Objetivos from '../Admin/Objetivos';
 
 const Stack = createStackNavigator();
 
@@ -162,6 +163,11 @@ export function RoutesStack() {
       <Stack.Screen
         name="ConcluirVenda"
         component={Concluido}
+        options={{ header: (props) => <Header {...props} /> }}
+      />
+      <Stack.Screen
+        name="objetivo"
+        component={Objetivos}
         options={{ header: (props) => <Header {...props} /> }}
       />
       <Stack.Screen
