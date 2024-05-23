@@ -8,7 +8,7 @@ import {
 import StyleHome from '../../../Styles/StyleHome';
 import { Ionicons ,FontAwesome,Feather,Fontisto,MaterialCommunityIcons} from '@expo/vector-icons';
 import CardProduto from '../Card/CardProduto';
-import { getAuth} from 'firebase/auth';
+import { getAuth,onAuthStateChanged} from 'firebase/auth';
 import { db } from '../../../Services/Firebaseconfig';
 import { getDoc,doc} from 'firebase/firestore';
 export default function Home({navigation}) {
@@ -20,9 +20,23 @@ export default function Home({navigation}) {
   const [numeroClientes,SetnumeroClientes] =useState();
   const [numeroVendas,SetnumeroVendas] =useState();
   const [data1,setdata1] = useState();
+  const[foraStock,setforaStock] = useState();
+  const auth = getAuth(); 
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
+        console.log('Nenhum usuário logado.');
+      }
+    });
+
+    return unsubscribe; 
+  }, [auth]);
 
   useEffect(()=>{
-    const auth = getAuth(); 
 
     const nomeuser = async () =>{
         try {
@@ -51,8 +65,6 @@ export default function Home({navigation}) {
     countClientes();
     countVendas();
 },[nome, sobrenome,empresa,image])
-
-const auth = getAuth(); 
 
 const countClientes = async () =>{
     try {
@@ -179,6 +191,7 @@ const countVendas = async () => {
             left:25,
             fontSize:16
           }}>Produtos fora do stock:</Text>
+        {foraStock ==  false ?(
          <FlatList
               data={data1}
               keyExtractor={(item)=> item.id}
@@ -193,7 +206,24 @@ const countVendas = async () => {
                 />
                 )}
            /> 
-      
+              ):(
+                <View>
+                <Image
+                            style={{ width: 220, height: 220, resizeMode: "contain",alignSelf:'center',marginTop:10}}
+                            source={{
+                                uri: "https://firebasestorage.googleapis.com/v0/b/stock-easy-7eced.appspot.com/o/imgs%2Fpersonal%20goals%20checklist-amico.png?alt=media&token=14ca1cfc-f6e2-4ff8-9512-274ab93877e8",
+                            }}
+                    />
+                <Text style={{
+                  left:25,
+                  fontSize:18,
+                  fontWeight:'bold',
+                  color:'green',
+                  textAlign:'center',
+                  marginRight:40
+                }}>Nenhum produto fora de stock!</Text>
+                </View>
+              )}
      
         
         

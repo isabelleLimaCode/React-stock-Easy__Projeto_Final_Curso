@@ -24,7 +24,8 @@ const data = [
     { id: '2', name: 'CRIANÇA', icon: 'right', style1: StylesCategoria.text2, icon2: 'baby-carriage', style2: StylesCategoria.icon1 },
     { id: '3', name: 'CASA', icon: 'right', style1: StylesCategoria.text2, icon2: 'home', style2: StylesCategoria.icon3 },
     { id: '4', name: 'ENTRETENIMENTO', icon: 'right', style1: StylesCategoria.text2, icon2: 'cards-playing', style2: StylesCategoria.icon2 },
-    { id: '5', name: 'ANIMAIS', icon: 'right', style1: StylesCategoria.text2, icon2: 'dog', style2: StylesCategoria.icon1 }
+    { id: '5', name: 'ANIMAIS', icon: 'right', style1: StylesCategoria.text2, icon2: 'dog', style2: StylesCategoria.icon1 },
+    { id: '6', name: 'TECNOLOGIA', icon: 'right', style1: StylesCategoria.text2, icon2: 'dog', style2: StylesCategoria.icon1 }
 ];
 
 export default function Categoria({ navigation, route }) {

@@ -41,6 +41,10 @@ import { MaterialCommunityIcons , AntDesign,MaterialIcons} from '@expo/vector-ic
     { id: '3', name: 'PEIXES',icon:'right', style1: StylesCategoria.text2,icon2:'fish',style2:StylesCategoria.icon1},
     { id: '4', name: 'PáSSAROS',icon:'right',style1: StylesCategoria.text2,icon2:'bird',style2:StylesCategoria.icon3},
   ];
+  const data6 = [
+    { id: '1', name: 'rato',icon:'right', style1: StylesCategoria.text2,icon2:'dog',style2: StylesCategoria.icon1},
+    { id: '2', name: 'Teclado',icon:'right',style1: StylesCategoria.text2,icon2:'cat',style2:StylesCategoria.icon1},
+  ];
 
 export default function Categoria2({navigation,route}) {
     const [modalVisible2, setModalVisible2] = useState(false);
@@ -67,6 +71,8 @@ export default function Categoria2({navigation,route}) {
           nomeItem = data4[index].name;
         }else if (currentData === data3){
           nomeItem = data5[index].name;
+        }else if (currentData === data6){
+          nomeItem = data6[index].name;
         }
         const params = { passadata: nomeItem, categoryYesOrNot: true };
         console.log('Nome:', nomeItem);
@@ -108,6 +114,9 @@ export default function Categoria2({navigation,route}) {
         break;
     case 5:
         setCurrentData(data5);
+        break;
+    case 6:
+        setCurrentData(data6);
         break;
       }
     setchangeCategory(!ChangeCategory);

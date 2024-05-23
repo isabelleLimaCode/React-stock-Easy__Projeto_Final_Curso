@@ -31,7 +31,7 @@ import Categoria2 from '../Admin/Categoria2';
 import Produto from '../Admin/Produtos';
 import Promocao from '../Admin/Promoção';
 import Header from '../Admin/Header';
-import Discont from '../Admin/discont';
+import Discont from '../Admin/Discont';
 import FinalizarVenda from '../Admin/FinalizarVenda';
 
 const Stack = createStackNavigator();
