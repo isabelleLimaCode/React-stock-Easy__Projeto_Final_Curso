@@ -10,7 +10,7 @@ export default StyleSheet.create({
     },
 
     secondConteiner:{
-        backgroundColor:'#3070B5',
+      backgroundColor:'#082854',
     },
 
     quadrado:{

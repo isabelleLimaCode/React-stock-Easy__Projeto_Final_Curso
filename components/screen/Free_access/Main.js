@@ -27,15 +27,14 @@ export default function Main({navigation}) {
    
         <ScrollView style={Stylemain.secondConteiner}>
             
-                    
-            <View style={{backgroundColor:'#082854'}}>
+            <View style={{}}>
                                                    
             <TouchableOpacity style={[Stylemain.btn,{top:40}]} onPress={() => navigation.navigate('Login')}>
-                <Text style={Stylemain.txt}> Entrar </Text>
+              <Text style={Stylemain.txt}> Entrar </Text>
                 <FontAwesome5 name="location-arrow" size={20} color="white" style={Stylemain.seta} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={[Stylemain.btn,{top:40,marginTop:10}]} onPress={() => navigation.navigate('Main')} >
+            <TouchableOpacity style={[Stylemain.btn,{top:40,marginTop:10}]} onPress={() => navigation.navigate('Criar conta')} >
                 <Text style={Stylemain.txt}> Criar Conta </Text>
                 <FontAwesome5 name="location-arrow" size={20} color="white" style={Stylemain.seta} />
             </TouchableOpacity>

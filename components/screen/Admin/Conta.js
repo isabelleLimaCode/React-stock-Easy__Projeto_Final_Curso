@@ -20,6 +20,7 @@ import { db } from '../../../Services/Firebaseconfig';
 import { getDoc,doc, collection, getDocs} from 'firebase/firestore';
 import { Ionicons,Entypo,FontAwesome5,MaterialCommunityIcons,Feather,AntDesign } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
+import firebase from 'firebase/compat/app';
 export default function Conta({ navigation, props }) {
 
     const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
@@ -35,6 +36,17 @@ export default function Conta({ navigation, props }) {
     const [sobrenome, setsobrenome] = useState();
     const [empresa,setempresa] = useState();
     const [image,setimage] = useState();
+
+
+    const modificarSenha = async () => {
+        firebase.auth().sendPasswordResetEmail(firebase.auth().currentUser.email);
+        try{
+          console.log('Email de redefinição de senha enviado!');
+          setModalPass(!modalPass);
+        }catch (error) {
+          console.log('Erro ao enviar email de redefinição de senha:', error);
+        }
+      };
 
     
     const pickImage = async () => {
