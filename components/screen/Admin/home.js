@@ -10,7 +10,7 @@ import { Ionicons ,FontAwesome,Feather,Fontisto,MaterialCommunityIcons} from '@e
 import CardProduto from '../Card/CardProduto';
 import { getAuth,onAuthStateChanged} from 'firebase/auth';
 import { db } from '../../../Services/Firebaseconfig';
-import { getDoc,doc} from 'firebase/firestore';
+import { getDoc,doc,onSnapshot} from 'firebase/firestore';
 export default function Home({navigation}) {
 
   const [nome, setnome] = useState();
@@ -112,31 +112,36 @@ const countVendas = async () => {
   }
 }
 
- useEffect(()=>{
-      const fetchProdutos = async () => {
-        try {
-            const user = auth.currentUser;
-            const produtosRef = doc(db, user.uid, 'produtos');
-            const produtosDoc = await getDoc(produtosRef);
+useEffect(() => {
+  const user = auth.currentUser;
+  const produtosRef = doc(db, user.uid, 'produtos');
 
-            if (produtosDoc.exists()) {
+  const unsubscribe = onSnapshot(produtosRef, (produtosDoc) => {
+      try {
+          if (produtosDoc.exists()) {
               const produtosData = produtosDoc.data();
               const produtos = produtosData.produtos || [];
 
-              const produtoExistente = produtos.filter(p => p.quantidade === '0');
-              console.log('produtos fora de stock',produtoExistente);
+              const produtoExistente = produtos.filter(p => Number(p.quantidade) === 0);
+              console.log('produtos fora de stock', produtoExistente);
               setdata1(produtoExistente);
-            } else {
-                console.log('Documento de produtos não encontrado');
-                Alert.alert('Erro', 'Documento de produtos não encontrado');
-            }
-        } catch (error) {
-            console.error('Erro ao buscar produtos:', error);
-            Alert.alert('Erro', 'Erro ao buscar produtos');
-        }
-    };
-    fetchProdutos();
-  },[])
+              console.log('data1', produtoExistente);
+              if (produtoExistente.length > 0) {
+                  setforaStock(false);
+              } else {
+                  setforaStock(true);
+              }
+          } else {
+              console.log('Documento de produtos não encontrado');
+              Alert.alert('Erro', 'Documento de produtos não encontrado');
+          }
+      } catch (error) {
+          console.error('Erro ao buscar produtos:', error);
+          Alert.alert('Erro', 'Erro ao buscar produtos');
+      }
+  });
+  return () => unsubscribe();
+}, []);
   return (
     <View style={{backgroundColor:'#FFF', flex:1}}>
     
@@ -203,6 +208,7 @@ const countVendas = async () => {
                   image={item.image}
                   changeColor={'red'}
                   changeshadowColor={'red'}
+                  productId={item}
                 />
                 )}
            /> 

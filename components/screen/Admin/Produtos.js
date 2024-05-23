@@ -110,6 +110,7 @@ export default function Produto({navigation}) {
                   quant={item.quantidade}
                   image={item.image}
                   onpress2={() => navigation.navigate('EditarProduto')}
+                  productId={item}
                 />
               )}
            />
