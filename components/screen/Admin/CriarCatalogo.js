@@ -9,12 +9,16 @@ import {
     TouchableOpacity,
     Alert,
     Pressable,
+    Keyboard,
+    TextInput,
 } from 'react-native';
 import StyleCardObj from '../../../Styles/StyleCardObj';
 import stylemain from '../../../Styles/Stylemain';
 import { FontAwesome5 ,AntDesign} from '@expo/vector-icons';
 import StyleCreateAccount from '../../../Styles/StyleCreateAccount';
 import * as ImagePicker from 'expo-image-picker';
+import { auth ,db} from '../../../Services/Firebaseconfig';
+import { arrayUnion, setDoc, doc, getDoc,updateDoc } from 'firebase/firestore';
 export default function CriarCatalogo({navigation}) {
 
 
@@ -23,10 +27,51 @@ export default function CriarCatalogo({navigation}) {
   const [Modal2visibile,Setmodal2visibile] = useState(false);
   const [image ,setImage] = useState();
   const [selectedAsset, setSelectedAsset] = useState({ uri: "" });
-  const [selectimage , setselectImage] = useState();
-
   
- 
+
+  //dados catalogo
+  const [nome,setnome]= useState();
+  const [selectimage , setselectImage] = useState();
+  
+  const fetchdataCatalogo = async () => {
+    const novoCatalogo = {
+        codigo: auth.currentUser.uid,
+        nome: nome,
+        logo: selectimage,
+    };
+    console.log('dados:',novoCatalogo);
+    try {
+        const user = auth.currentUser;
+        const catalogoRef = doc(db,'catalogo',user.uid);
+        const catalogoDoc = await getDoc(catalogoRef);
+        
+        if (catalogoDoc.exists()) {
+            const catalogoData = catalogoDoc.data();
+            const catalogo = catalogoData.catalogo || [];
+
+            const catalogoExistente = catalogo.find(p => p.nif === catalogo.codigo);
+            
+            if (catalogoExistente) {
+                console.log('Catalogo já existe na base de dados');
+                Alert.alert('Adicionar Catalogo','Catalogo já existe na base de dados');
+            } else {
+                
+                await updateDoc(catalogoRef, {
+                    catalogo: arrayUnion(novoCatalogo),
+                });
+                console.log('Catalogo adicionado com sucesso:', novoCatalogo.codigo);
+                Alert.alert('Catalogo:','Catalogo adicionado com sucesso');
+            }
+        } else {
+            await setDoc(catalogoRef, { catalogo: [novoCatalogo] });
+            console.log('Documento de catalogo criado com sucesso');
+            Alert.alert('Sucesso', 'Documento do catalogo criado com sucesso');
+        }
+    } catch (error) {
+        console.error('Erro','Erro ao adicionar catalogo:', error);
+        Alert.alert('Error','Erro ao adicionar catalogo');
+    }
+};
   
   
   const pickImage = async () => {
@@ -54,6 +99,10 @@ export default function CriarCatalogo({navigation}) {
       console.error("Erro ao selecionar imagem:", error);
     }
   };
+  const handlechangenome =(text) =>{
+    setnome(text);
+    
+  }
   
   
 
@@ -75,10 +124,20 @@ export default function CriarCatalogo({navigation}) {
                     <TouchableOpacity style ={[stylemain.input,{}]} onPress={() => Setmodal2visibile(!Modal2visibile)}>
                                     <Text>{selectimage}</Text>
                     </TouchableOpacity>
+      <Text style={[stylemain.textinput,{color:'#000'}]}>    Nome da empresa: </Text>
+      <TextInput style={[
+        stylemain.input,
+        {width:350,height:40, 
+        backgroundColor:'#fff',
+        color:'#000'
+        }]} placeholder="Insira o nome da empresa" 
+        onPress={Keyboard.dismiss}
+        onChangeText={handlechangenome}
+        /> 
 
    
       
-      <TouchableOpacity style={[stylemain.btn,{marginTop:100}]}>
+      <TouchableOpacity style={[stylemain.btn,{marginTop:100}]} onPress={fetchdataCatalogo}>
                     <Text style={stylemain.txt}>Criar Catálogo </Text>
                     <FontAwesome5 name="location-arrow" size={20} color="white" style={stylemain.seta} />
       </TouchableOpacity>
