@@ -10,13 +10,18 @@ import {
     Platform,
     ScrollView,
     ActivityIndicator,
-    Alert
+    Alert,
+    Modal,
+    Pressable,
+    Dimensions,
 } from 'react-native';
 import Stylemain from '../../../Styles/Stylemain';
 import { FontAwesome5 ,AntDesign} from '@expo/vector-icons';
 import {db,auth,app} from '../../../Services/Firebaseconfig';
 import {doc,getDoc,collection,query,where,getDocs} from 'firebase/firestore'
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import { styles } from 'react-native-gifted-charts/src/LineChart/styles';
+import { get } from 'firebase/database';
 
 
 
@@ -29,7 +34,9 @@ export default function Login({navigation,route}) {
     const [email, setEmail] = useState();
     const [passwuser,setpassuser] =useState();
     const [signin, setsignin] = useState(false);
-
+    const [modalPass, setModalPass, ] = useState(false);
+    const [modalVisible, setModalVisible, ] = useState(false); 
+    const deviceWidth = Dimensions.get("window").width;
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -41,6 +48,7 @@ export default function Login({navigation,route}) {
    const handlechangedatapass =(text) =>{
       setpassuser(text);
     }
+
 
     useEffect(()=>{
         console.log(isLoading);
@@ -128,6 +136,21 @@ export default function Login({navigation,route}) {
       }
     }
 
+    const StatePress = async () => {
+      setModalVisible(!modalVisible);
+      const auth = getAuth();
+      const usersRef = collection(auth.currentUser.uid, 'dados');
+      const q = query(usersRef, where('email', '==', email));
+      const querySnapshot = await getDocs(q);
+      console.log('querySnapshot', querySnapshot);
+    
+      if (querySnapshot.docs.length > 0) {
+        //navigation.navigate('ResetPass', { resetpass: email });
+      } else {
+        Alert.alert('Erro', 'Email inválido. Verifique suas credenciais.');
+      }
+    };
+
 
     
 
@@ -138,24 +161,17 @@ export default function Login({navigation,route}) {
     behavior={Platform.OS == "ios" ? "padding" : "height"}  style={{flex:1, backgroundColor:'#082854'}} >
        
       
-       <View style={Stylemain.mainConteiner}>
+       <View style ={{alignItems: 'center',top:40}}>
        <TouchableOpacity onPress={() => navigation.goBack()}>
-            <AntDesign style={{left:10,marginTop:60}} name="back" size={24} color="black" />
+            <AntDesign style={{right:160,marginBottom:5,marginTop:10}} name="back" size={24} color="white" />
           </TouchableOpacity>
-       
-            <Image style= {Stylemain.logo} source={require('./../../../assets/logo.gif')}/>
-        
-       </View>
+       <Image style= {Stylemain.logo} source={require('./../../../assets/Logo_5.png')}/>         
+        </View>
    
-        <ScrollView style={Stylemain.secondConteiner}>
+        <ScrollView style={Stylemain.secondConteiner2}>
                   
-            <View style={{backgroundColor:'#082854'}}>
-
-                <TouchableOpacity style={Stylemain.btn2}>
-                        <Text style={Stylemain.txt2}>Google</Text>
-                        <Image style= {Stylemain.imag7} source={require('./../../../assets/google.png')}/>
-                </TouchableOpacity>
-                                                   
+            <View>
+                                           
                 <Text style={Stylemain.textinput}>    E-mail: </Text>
                 <TextInput style={Stylemain.input} placeholder="Exemplo@gmail.com"  onChangeText={handlechangedataEmail}/> 
 
@@ -167,13 +183,27 @@ export default function Login({navigation,route}) {
                <TouchableOpacity onPress={togglePasswordVisibility} style={Stylemain.eye}>
                     <FontAwesome5 name={showPassword ? 'eye' : 'eye-slash'} size={20} color="black" />
                 </TouchableOpacity>
+                <TouchableOpacity  onPress={() => setModalVisible(!modalVisible)}>
+                  <Text style={{
+                    color:'#fff',
+                    textAlign:'center',
+                    left:80,
+                    top:10,
+                  }}>Esqueceu a sua Password? </Text>
+                </TouchableOpacity>  
 
                 <TouchableOpacity style={[Stylemain.btn,{top:30}]} onPress={checkdoc} >
                     <Text style={Stylemain.txt}>Iniciar Sessão</Text>
                     <FontAwesome5 name="location-arrow" size={20} color="white" style={Stylemain.seta} />
                 </TouchableOpacity>
 
-                
+              <View style={{flexDirection:'column'}}>
+              <Text style={Stylemain.textGoogle}> Ou acesse com </Text>
+                  <TouchableOpacity style={[Stylemain.btn2,{marginTop:20}]}>
+                        <Text style={Stylemain.txt2}>Google</Text>
+                        <Image style= {Stylemain.imag7} source={require('./../../../assets/google.png')}/>
+                  </TouchableOpacity>
+              </View>
             </View>
         </ScrollView>
         {isLoading &&(
@@ -184,6 +214,60 @@ export default function Login({navigation,route}) {
                             
                         </View>
         )}
+
+    <Modal
+        animationType="slide"
+        transparent={true}
+        deviceWidth={deviceWidth}
+        visible={modalVisible}
+        onRequestClose={() => {
+        Alert.alert('Modal has been closed.');
+        setModalVisible(!modalVisible);
+        }}>
+        <View style={Stylemain.centeredView}>
+                                                        
+        <View style={Stylemain.modalView}>
+        <Image style={{width:130,height:130,marginBottom:10,alignSelf:'center'}} source={require('./../../../assets/forgot-password.png')}/> 
+        <Text style={{fontWeight:'bold',marginBottom:10,textAlign:'center'}}>Esqueceu Sua Password ? </Text>
+        <TextInput style={[Stylemain.input,{backgroundColor:'black',color:'white'}]} placeholder="Digite seu Email" placeholderTextColor="#fff" onChangeText={handlechangedataEmail}/> 
+          <Pressable
+          style={[Stylemain.conteinerbtn,{backgroundColor:'#059669'}]}
+          onPress={StatePress}>
+          <Text style={{color:'white'}}>Enviar Redefinição</Text>
+        </Pressable>
+          <Pressable
+          style={[Stylemain.conteinerbtn,{backgroundColor:'#059669',marginTop:5}]}
+          onPress={() => setModalVisible(!modalVisible)}>
+          <Text style={{color:'white', width:120,textAlign:'center'}}>Cancelar</Text>
+          </Pressable>
+          </View>
+    </View>
+  </Modal>
+
+  <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalPass}
+      onRequestClose={() => {
+      Alert.alert('Modal has been closed.');
+      setModalPass(!modalPass);
+      }}>
+      <View style={Stylemain.centeredView}>
+      <View style={Stylemain.modalView}>
+        <Text style={{fontWeight: "bold"}}>
+          Pedido de Redefinição de password</Text>
+        <Text/>
+        <Text style={{justifycontent: "center", alignItems: "center"}}>
+            Verifique o email cadastrado
+            no nome do usuário!</Text>
+        <Pressable
+          style={Stylemain.conteinerbtn}
+          onPress={() => setModalPass(!modalPass)}>
+          <Text style={{color:'white'}}>Sair</Text>
+        </Pressable>
+      </View>
+    </View>
+  </Modal> 
     </KeyboardAvoidingView>
   );
 }

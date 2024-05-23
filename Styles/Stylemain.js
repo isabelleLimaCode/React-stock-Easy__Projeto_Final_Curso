@@ -109,7 +109,7 @@ export default StyleSheet.create({
         borderRadius: 15,
         backgroundColor: '#fff',
         alignSelf:'center',
-        top:18
+        top:18,
       },
 
       txt2:{
@@ -122,5 +122,78 @@ export default StyleSheet.create({
         borderRadius:15,
         right:-50
       },
+
+      secondConteiner2:{
+      backgroundColor:'#fff',
+      backgroundColor:'#082854',
+      top:-40
+        
+    },
+    header:{
+        fontSize:25, 
+        color:'white' , 
+        fontWeight:'bold',
+        top:10, 
+        height:50, 
+        left:'1%',
+        backgroundColor:'#082854',
+      },
+      header2:{
+        fontSize:13, 
+        color:'white',
+        top:10, 
+        height:80, 
+        left:'1%',
+        justifyContent:'space-between',
+        alignItems:'center',
+        backgroundColor:'#082854',
+      },
+    
+    textGoogle:{
+     fontWeight:'bold',
+     fontSize:15,
+     top:30,
+     textAlign:'center',
+     marginTop:20,
+     marginBottom:5,
+     color:'#fff'
+
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+        borderRadius:30,
+        alignSelf:'center',
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        width:370,
+      },
+      conteinerbtn:{
+        padding:16,
+        backgroundColor:'#3C464E',
+        alignItems:'center',
+        justifyContent:'center',
+        width:'70%',
+        borderRadius:8,
+        paddingHorizontal:16,
+        top:20,
+        marginTop:10
+      },
+   
 
 });

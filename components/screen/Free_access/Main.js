@@ -19,11 +19,11 @@ export default function Main({navigation}) {
     <KeyboardAvoidingView 
     behavior={Platform.OS == "ios" ? "padding" : "height"}  style={{flex:1, backgroundColor:'#082854'}} >
 
-       <View style={[Stylemain.mainConteiner,{}]}>
+      
         <View style={{height:60}}/>
-        <Image style= {Stylemain.logo} source={require('./../../../assets/logo.gif')}/>
+        <Image style= {Stylemain.logo} source={require('./../../../assets/Logo_5.png')}/>
 
-       </View>
+       
    
         <ScrollView style={Stylemain.secondConteiner}>
             
