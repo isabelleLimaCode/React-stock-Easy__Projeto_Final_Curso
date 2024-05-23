@@ -77,13 +77,13 @@ export default function Categoria2({navigation,route}) {
               {
                   text: 'Sim',
                   onPress: () => {
-                    navigation.navigate('novoproduto', params);
+                    navigation.navigate('CriarProduto', params);
                   }
               },
               {
                   text: 'Não',
                   onPress: () => {
-                    navigation.navigate('novoproduto', { passadata: ' ' ,categoryYesOrNot:' '});
+                    navigation.navigate('CriarProduto', { passadata: ' ' ,categoryYesOrNot:' '});
                   }
               }
           ],

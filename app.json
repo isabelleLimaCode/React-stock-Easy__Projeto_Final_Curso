@@ -2,6 +2,7 @@
   "expo": {
     "name": "StockEasy",
     "slug": "StockEasy",
+    "plugin":["@react-native-firebase/app","@react-native-firebase/auth"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,16 +13,24 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.isa12.StockEasy"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.isa12.StockEasy"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7af9aed7-4b29-4e84-8fb1-ac596f5f0a36"
+      }
     }
   }
 }

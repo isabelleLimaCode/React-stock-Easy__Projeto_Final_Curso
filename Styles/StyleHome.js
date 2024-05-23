@@ -17,7 +17,6 @@ export default StyleSheet.create({
         borderRadius:12,
         marginHorizontal:10,
         marginTop:5
-        
     },
     text:{
         fontWeight:'bold',

@@ -85,7 +85,7 @@ export default function Categoria({ navigation, route }) {
     };
 
     return (
-        <View style={{ backgroundColor: '#fff', flex: 1 ,marginTop:70}}>
+        <View style={{ backgroundColor: '#fff', flex: 1}}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
                 <AntDesign style={{ left: 10, top: 10 }} name="back" size={24} color="black" />
             </TouchableOpacity>

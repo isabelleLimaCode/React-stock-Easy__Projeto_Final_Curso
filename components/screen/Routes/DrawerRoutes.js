@@ -51,7 +51,7 @@ export function MyDrawer({ navigation, ...props }) {
         component={Tabnav}
         options={{
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="md-apps" size={size} color={color} />
+            <AntDesign name="appstore1" size={size} ccolor={color} />
           ),
           drawerLabel: 'Início',
         }}

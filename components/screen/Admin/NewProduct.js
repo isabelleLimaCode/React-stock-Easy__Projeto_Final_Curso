@@ -232,37 +232,37 @@ export default function NewProduct({navigation,route}) {
         }
       };
 
-    const pickImageCamera = async () => {
+      const pickImageCamera = async () => {
         try {
-            const { status } = await ImagePicker.requestCameraPermissionsAsync();
-            if (status !== 'granted') {
+          const { status } = await ImagePicker.requestCameraPermissionsAsync();
+          if (status !== 'granted') {
             console.error('Permissão para acessar a câmera negada.');
             return;
-            }
-
-            const result = await ImagePicker.launchCameraAsync({
+          }
+    
+          const result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
-            });
-
-            if (!result.canceled) {
-            if (result.uri) {
-                setselectImage(result.uri);
-                console.log(selectimage);
-                setChangeYesorNot(true);
+          });
+    
+          if (!result.canceled) {
+            if (result.assets && result.assets.length > 0) {
+              const uri = result.assets[0].uri;
+              setselectImage(uri);
+              console.log(uri);
+              setChangeYesorNot(true);
             } else {
-                console.error('Erro ao obter o URI da imagem selecionada.');
+              console.error('Erro ao obter o URI da imagem selecionada.');
             }
-            }
-
-            Setmodal2visibile(!Modal2visibile);
+          }
+    
+          Setmodal2visibile(!Modal2visibile);
         } catch (error) {
-            console.error('Erro ao selecionar imagem:', error);
+          console.error('Erro ao selecionar imagem:', error);
         }
-    };
-
+      };
 
       const changemodel = () => {
         Setmodal4visibile(!Modal4visibile);

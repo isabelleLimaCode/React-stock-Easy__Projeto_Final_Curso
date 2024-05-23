@@ -6,7 +6,6 @@ import {
     TouchableOpacity,
     ScrollView,
     KeyboardAvoidingView,
-    Platform,
     SafeAreaView,    
 } from 'react-native';
 import StyleCardObj from '../../../Styles/StyleCardObj';
@@ -28,10 +27,10 @@ export default function Stock() {
         setRefreshing(false);
       }, [SetDonthave]);
 
-  const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
+  //const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
 
   return (
-    <KeyboardAvoidingView behavior={behavior} style={{ flex: 1, backgroundColor:'#fff' }}>
+    <KeyboardAvoidingView  style={{ flex: 1, backgroundColor:'#fff' }}>
       <ScrollView style={{backgroundColor:'#fff',marginTop:40}}>
 
         <SafeAreaView style={StyleCardObj.root}>

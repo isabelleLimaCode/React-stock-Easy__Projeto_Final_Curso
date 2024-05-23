@@ -254,7 +254,7 @@ export default function Discont({navigation}) {
         {isLoading &&(
               <View style={{position:'absolute',alignSelf:'center',top:670}}>
                 <ActivityIndicator size="large" color="#000" />
-                <Text style={{}}>Registrando nova venda...</Text>
+                <Text style={{}}>Registrando novo Cupão...</Text>
               </View>
         )}
         </KeyboardAvoidingView>

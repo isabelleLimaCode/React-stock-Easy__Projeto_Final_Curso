@@ -79,7 +79,7 @@ export default function Produto({navigation}) {
   };
   
   return (
-    <KeyboardAvoidingView behavior={behavior} style={{flex:1,backgroundColor:'#fff'}}>
+    <KeyboardAvoidingView  style={{flex:1,backgroundColor:'#fff'}}>
       <View style={{backgroundColor:'#fff'}}>
       <Text style={[StyleCardObj.text2,{}]}>Stock</Text>
     </View>

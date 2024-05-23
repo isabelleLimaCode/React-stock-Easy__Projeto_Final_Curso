@@ -10,7 +10,7 @@ import { Ionicons ,FontAwesome,Feather,Fontisto,MaterialCommunityIcons} from '@e
 import CardProduto from '../Card/CardProduto';
 import { getAuth} from 'firebase/auth';
 import { db } from '../../../Services/Firebaseconfig';
-import { getDoc,doc, collection, getDocs } from 'firebase/firestore';
+import { getDoc,doc} from 'firebase/firestore';
 export default function Home({navigation}) {
 
   const [nome, setnome] = useState();

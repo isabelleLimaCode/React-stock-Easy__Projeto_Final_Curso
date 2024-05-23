@@ -20,7 +20,7 @@ const Mainbar = props =>  {
 const [isLoading, setIsLoading] = useState(false);
 const [nome, setnome] = useState(false);
 const [sobrenome, setsobrenome] = useState(false);
-const [photo,setphoto] = useState();
+const [photo,setphoto] = useState(null);
 const [temTemImage,setTemImage] =useState(false)
 const { navigation} = props;
 
@@ -41,6 +41,7 @@ useEffect(()=>{
                     setnome(userdata.nome);
                     setsobrenome(userdata.sobrenome);
                     setphoto(userdata.uirphoto);
+                    console.log(photo);
                 }else {
                     console.log('Documento do usuário não encontrado.');
                 }
@@ -68,7 +69,7 @@ const handleResetNavigation = async () => {
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'inicio' }]
+                routes: [{ name: 'Main' }]
             })
         );
     }, 3000);
@@ -80,9 +81,8 @@ const handleResetNavigation = async () => {
             {...props} 
             contentContainerStyle={{backgroundColor:'#000'}}>
                 <ImageBackground  source={require('../../../assets/imag_back.jpg')} style={{padding:20}}>
-                <Image  source={{
-                    uri: photo,
-                }}
+                <Image  
+                source={{ uri: photo }}
                 style={{
                     height:80,
                     width:80,
