@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     SafeAreaView,
+    Platform
 } from 'react-native';
 import StyleCardObj from '../../../Styles/StyleCardObj';
 import { AntDesign} from '@expo/vector-icons';

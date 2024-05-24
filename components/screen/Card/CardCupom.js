@@ -6,9 +6,9 @@ import {
     Image,
     TouchableOpacity,
 } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign,FontAwesome ,Feather} from '@expo/vector-icons';
 import StylesCardCupom from '../../../Styles/StylesCardCupom';
-export default function CardCupom({ desconto,quantidade}) {
+export default function CardCupom({ desconto,quantidade,onpress1,onpress2}) {
 
     const cardWidth = Dimensions.get("window").width * 0.8;
     const skeWidth = cardWidth - 32;
@@ -29,6 +29,21 @@ export default function CardCupom({ desconto,quantidade}) {
                         <Text style={StylesCardCupom.text2}>Desconto</Text>
                         <Text style={StylesCardCupom.text2}>{desconto}</Text>
                         <Text style={StylesCardCupom.text2}>Disponíveis: {quantidade}</Text>
+                        <TouchableOpacity onPress={onpress1}>
+                            <FontAwesome  style={{
+                                alignSelf:'center',
+                                top:-80,
+                                left:160,
+                            }} name="trash" size={26} color="red" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onpress2}>
+                        <Feather style={{
+                                alignSelf:'center',
+                                top:-40,
+                                left:160,
+                        }} name="edit" size={24} color="white" />
+                        </TouchableOpacity>
+                       
                      </View>
                 </View>
                 </View>
@@ -36,7 +51,7 @@ export default function CardCupom({ desconto,quantidade}) {
 
             <View style={{ alignItems: 'center', justifyContent: 'center', right: 100 }}>
                 <View style={{ transform: [{ rotate: '90deg' }] }}>
-                    <AntDesign style={StylesCardCupom.iconbar} name="barcode" size={80} color="#53ba83" />
+                    <AntDesign style={StylesCardCupom.iconbar} name="barcode" size={70} color="#53ba83" />
                 </View>
             </View>
         </View>

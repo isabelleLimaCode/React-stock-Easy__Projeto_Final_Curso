@@ -19,6 +19,8 @@ import StyleNewProduct from '../../../Styles/StyleNewProduct';
 import { AntDesign } from '@expo/vector-icons';
 import {db,auth} from '../../../Services/Firebaseconfig';
 import { arrayUnion, setDoc, doc, getDoc,updateDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { set } from 'firebase/database';
 
 export default function Discont({navigation}) {
 
@@ -29,12 +31,15 @@ export default function Discont({navigation}) {
     const [valordiscont,setValordiscont] = useState();
     const [valorfinal,Setvalorfinal] = useState();
     const [isLoading, setIsLoading] = useState(false);
-    const [quantidade,setvalorquantidade]= useState();
+    const [quantidade,setvalorquantidade]= useState(1);
 
     //button toogle switch 
     const [isEnable,setIsEnable] = useState(false);
 
+    const [numeroCupao,SetnumeroCupao] =useState();
+
     useEffect(()=>{
+        console.log('idcupao',numeroCupao);
         console.log('valorminimo',valorvenda);
         console.log('range',range);
         console.log('cupão unico',isEnable);
@@ -42,8 +47,45 @@ export default function Discont({navigation}) {
     },[valorcompra,range,isEnable,quantidade])
 
 
+    useEffect(() => {
+        const countCupao = async () => {
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    console.log('Usuário não autenticado');
+                    return;
+                }
+
+                const cupaoRef = doc(db,user.uid, 'cupões');
+                const cupaoDoc = await getDoc(cupaoRef);
+
+                if (cupaoDoc.exists()) {
+                    const cupaoData = cupaoDoc.data();
+
+                    if (cupaoData.cupões) {
+                        const numcupao = cupaoData.cupões.length;
+                        const numcupao2 = numcupao + 1;
+                        SetnumeroCupao(numcupao2);
+                        console.log(numcupao2);
+                    } else {
+                        console.log('O array de cupões está vazio');
+                    }
+                } else {
+                    console.log('Documento de cupões não encontrado');
+                }
+            } catch (error) {
+                console.error('Erro ao buscar cupões:', error);
+                Alert.alert('Erro', 'Erro ao buscar cupões');
+            }
+        };
+
+        countCupao();
+    }, []);
+
     const fetchdataCupao = async () => {
+        const auth = getAuth();
         const novoCupao = {
+           id: numeroCupao,
            valorMinimo: valorvenda,
            porcentagem: range,
            cupaoUsoUnico: isEnable,
@@ -58,6 +100,9 @@ export default function Discont({navigation}) {
             if (cupaoDoc.exists()) {
                 const cupaoData = cupaoDoc.data();
                 const cupao = cupaoData.clientes || [];
+
+                const numcupao = cupao.length > 0 ? cupao.length + 1 : 1;
+                SetnumeroCupao(numcupao);
     
                 const cupaoExistente = cupao.find(p => p.valorMinimo === novoCupao.valorMinimo);
                 const cupaoExistente2 = cupao.find(p => p.porcentagem === novoCupao.porcentagem);

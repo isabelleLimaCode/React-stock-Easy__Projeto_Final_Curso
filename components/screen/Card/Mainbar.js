@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { signOut ,getAuth} from 'firebase/auth';
 import { db ,auth} from '../../../Services/Firebaseconfig';
-import { getDoc,doc } from 'firebase/firestore';
+import { getDoc,doc ,onSnapshot} from 'firebase/firestore';
 
 const Mainbar = props =>  {
     
@@ -28,7 +28,9 @@ const { navigation} = props;
 
 useEffect(()=>{
     const auth = getAuth(); 
-
+    const user = auth.currentUser;
+    const userRef = doc(db, user.uid, 'dados');
+    const unsubscribe = onSnapshot(userRef, (produtosDoc) => {
     const nomeuser = async () =>{
         try {
             if(auth.currentUser){
@@ -53,7 +55,9 @@ useEffect(()=>{
         }
     }
     nomeuser();
-},[nome,sobrenome,photo])
+    });
+    return () => unsubscribe();
+},[])
 
 const handleResetNavigation = async () => {
     

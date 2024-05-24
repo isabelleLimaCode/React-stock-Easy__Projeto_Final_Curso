@@ -4,6 +4,7 @@ import {
     View,
     Image,
     FlatList,
+    Alert
 } from 'react-native';
 import StyleHome from '../../../Styles/StyleHome';
 import { Ionicons ,FontAwesome,Feather,Fontisto,MaterialCommunityIcons} from '@expo/vector-icons';
@@ -114,6 +115,11 @@ const countVendas = async () => {
 
 useEffect(() => {
   const user = auth.currentUser;
+  if (!user) {
+      console.log('Usuário não autenticado');
+      return;
+  }
+  
   const produtosRef = doc(db, user.uid, 'produtos');
 
   const unsubscribe = onSnapshot(produtosRef, (produtosDoc) => {
@@ -122,24 +128,32 @@ useEffect(() => {
               const produtosData = produtosDoc.data();
               const produtos = produtosData.produtos || [];
 
+              if (produtos.length === 0) {
+                  console.log('Nenhum produto encontrado');
+                  setdata1([]);
+                  setforaStock(true);
+                  return;
+              }
+
               const produtoExistente = produtos.filter(p => Number(p.quantidade) === 0);
               console.log('produtos fora de stock', produtoExistente);
               setdata1(produtoExistente);
               console.log('data1', produtoExistente);
-              if (produtoExistente.length > 0) {
-                  setforaStock(false);
-              } else {
-                  setforaStock(true);
-              }
+              setforaStock(produtoExistente.length === 0);
           } else {
               console.log('Documento de produtos não encontrado');
+              setdata1([]);
+              setforaStock(true);
               Alert.alert('Erro', 'Documento de produtos não encontrado');
           }
       } catch (error) {
           console.error('Erro ao buscar produtos:', error);
+          setdata1([]);
+          setforaStock(true);
           Alert.alert('Erro', 'Erro ao buscar produtos');
       }
   });
+
   return () => unsubscribe();
 }, []);
   return (
