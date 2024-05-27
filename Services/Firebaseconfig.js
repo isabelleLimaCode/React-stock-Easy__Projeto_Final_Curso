@@ -1,8 +1,8 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { initializeApp, getApps, getApp} from 'firebase/app';
+import { getFirestore,initializeFirestore,persistentLocalCache} from 'firebase/firestore';
+import { initializeAuth, getAuth, getReactNativePersistence } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDPPBwyfGsPqBiaRJKFnbcYWlQInAV3cBc",
@@ -15,12 +15,23 @@ const firebaseConfig = {
   measurementId: "G-J6TELEW3TG"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
 
-const auth = initializeAuth(app, {
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+
+const auth = getApps().length === 0 ? initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage)
-});
+}) : getAuth(app);
 
-export { db, auth};
+
+let db;
+if (getApps().length === 0) {
+  db = initializeFirestore(app, {
+    experimentalAutoDetectLongPolling: true,
+    localCache: persistentLocalCache,
+  });
+} else {
+  db = getFirestore(app);
+}
+
+export { db, auth };

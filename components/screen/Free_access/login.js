@@ -17,7 +17,6 @@ import {
 import Stylemain from '../../../Styles/Stylemain';
 import { FontAwesome5, AntDesign } from '@expo/vector-icons';
 import { db, auth } from '../../../Services/Firebaseconfig';
-import firebase from 'firebase/compat/app';
 import {signInWithEmailAndPassword,sendPasswordResetEmail,RecaptchaVerifier} from 'firebase/auth';
 import { getDoc,doc, collection, getDocs} from 'firebase/firestore';
 

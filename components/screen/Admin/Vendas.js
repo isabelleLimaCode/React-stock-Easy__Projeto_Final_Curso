@@ -4,14 +4,15 @@ import {
     View,
     TouchableOpacity,
     SafeAreaView,
-    FlatList
+    FlatList,
+    Image,
 } from 'react-native';
 import StyleVenda from '../../../Styles/StyleVenda';
 import SearchBar from '../SearchBar/SearchBar';
 import StyleCardObj from '../../../Styles/StyleCardObj';
 import CardEncomenda from '../Card/CardEncomenda';
 import { db, auth} from '../../../Services/Firebaseconfig';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc ,onSnapshot} from 'firebase/firestore';
 
 export default function Vendas({navigation,route}) {
 
@@ -26,10 +27,12 @@ export default function Vendas({navigation,route}) {
 
   
   useEffect(()=>{
+    const user = auth.currentUser;
+    const vendasRef = doc(db, user.uid, 'Vendas');
+    const unsubscribe = onSnapshot(vendasRef, (vendasDoc) =>{
     const fetchProdutos = async () => {
       try {
-          const user = auth.currentUser;
-          const vendasRef = doc(db, user.uid, 'Vendas');
+          
           const vendasDoc = await getDoc(vendasRef);
 
           if (vendasDoc.exists()) {
@@ -46,9 +49,10 @@ export default function Vendas({navigation,route}) {
           console.error('Erro ao buscar vendas:', error);
           Alert.alert('Erro', 'Erro ao buscar vendas');
       }
-  };
-
-  fetchProdutos();
+    }
+    fetchProdutos();
+  });
+  return () => unsubscribe();
 },[])
 
   const data =[
@@ -147,7 +151,17 @@ const [filteredData2, setFilteredData2] = useState(data);
               />
             )}
           />
-        ) : null}
+        ) : ( <View  style={{marginBottom:150}}>
+              <Image style={{ width: 250, height: 250,marginBottom: 10,alignSelf: 'center',marginTop:200 }} source={require('./../../../assets/NaohaVendas.png')} />
+                      <Text style ={{
+                          textAlign:'center',
+                          fontWeight:'800',
+                          fontSize:20,
+                      }}>
+                      Ops! Não há Vendas
+                      </Text>
+            </View>)
+          }
 
 
             {SelectSaida == 1 ?(
@@ -164,7 +178,17 @@ const [filteredData2, setFilteredData2] = useState(data);
                   )}
                 />
 
-                ):null} 
+                ):( <View style={{marginBottom:150}}>
+                  <Image style={{ width: 250, height: 250,alignSelf: 'center'}} source={require('./../../../assets/NaohaVendas.png')} />
+                          <Text style ={{
+                              textAlign:'center',
+                              fontWeight:'800',
+                              fontSize:20,
+                              marginTop:10
+                          }}>
+                          Ops! Não há Vendas
+                          </Text>
+              </View>)} 
 
     </View>
   );
