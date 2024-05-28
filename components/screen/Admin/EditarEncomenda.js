@@ -36,11 +36,13 @@ export default function EditarEncomenda ({navigation,route}) {
     const { DadosCliente } = route.params;
     const {dataencomeda } = route.params;
     const[DadosEncomenda2,setDadosEncomenda2] = useState(route.params?.DadosEncomenda2);
+    const[DadosEncomenda1,setDadosEncomenda1] = useState(route.params?.DadosEncomenda1);
 
     useEffect(()=>{
       console.log('dados encomenda',DadosEncomenda);
       console.log('dados cliente',DadosCliente);
       console.log('dados data',dataencomeda);
+      console.log('encomenda',nEncomenda);
     },[nEncomenda])
    
   return (
@@ -59,7 +61,7 @@ export default function EditarEncomenda ({navigation,route}) {
         <Checkbox style={StylesEncomenda.stylebox} disabled value={isChecked} onValueChange={setChecked} />
       </TouchableOpacity>
 
-      <TouchableOpacity style={StylesEncomenda.btnContainer}onPress={() => navigation.navigate('prepararEncomenda',{DadosEncomenda2:DadosEncomenda})}>
+      <TouchableOpacity style={StylesEncomenda.btnContainer}onPress={() => navigation.navigate('prepararEncomenda',{DadosEncomenda2:DadosEncomenda,DadosEncomenda1:nEncomenda})}>
         <Text style={[StylesEncomenda.Text1,{marginBottom:15,marginTop:15}]}>Preparar encomenda</Text>
         <Checkbox style={StylesEncomenda.stylebox} disabled value={isChecked2} onValueChange={setChecked2} />
       </TouchableOpacity>

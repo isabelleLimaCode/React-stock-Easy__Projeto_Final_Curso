@@ -34,6 +34,8 @@ export default function CheckCarrinho({navigation,route}) {
     const { passadata} = route.params;
     const { passadata2} = route.params;
     const {valorPagar} = route.params;
+    const [valorEntrega, setvalorEntrega] = useState(5);
+    const formattedValorEntrega = valorEntrega.toFixed(2);
     
 
   
@@ -53,7 +55,7 @@ export default function CheckCarrinho({navigation,route}) {
 
     const calcularValor = () => {
       const valorTotal = passadata2.reduce((total, produto) => {
-        return total + parseFloat(produto.valorcompra);
+        return total + parseFloat(produto.valorcompra) + parseFloat(valorEntrega);
       }, 0);
       return valorTotal;
     };
@@ -126,14 +128,14 @@ export default function CheckCarrinho({navigation,route}) {
           flexDirection:'row'
         }}>
               <Text style={StyleCardObj.textn}>Entrega:</Text>
-              <Text style={StyleCardObj.textn}>5.00€</Text>
+              <Text style={StyleCardObj.textn}>{valorEntrega}€</Text>
         </View>
         <View style = {{
           justifyContent:'space-between',
           flexDirection:'row'
         }}>
               <Text style={StyleCardObj.textn}>Desconto:</Text>
-              <Text style={StyleCardObj.textn}>5.00€</Text>
+              <Text style={StyleCardObj.textn}>{valorEntrega}€</Text>
         </View>
 
         <View style = {{

@@ -23,7 +23,7 @@ import { MaterialCommunityIcons , AntDesign,MaterialIcons} from '@expo/vector-ic
     { id: '2', name: 'CALÇADO',icon:'right',style1: StylesCategoria.text2,icon2:'shoe-sneaker',style2:StylesCategoria.icon1},
     { id: '3', name: 'MALAS',icon:'right', style1: StylesCategoria.text2,icon2:'bag-personal',style2:StylesCategoria.icon1},
     { id: '4', name: 'ACESSÓRIOS',icon:'right',style1: StylesCategoria.text2,icon2:'ring',style2:StylesCategoria.icon3},
-    { id: '5', name: 'BELEZA',icon:'right',style1: StylesCategoria.text,icon2:'hair-dryer',style2:StylesCategoria.icon2},
+    { id: '5', name: 'BELEZA',icon:'right',style1: StylesCategoria.text2,icon2:'hair-dryer',style2:StylesCategoria.icon2},
   ];
   const data3 = [
     { id: '1', name: 'TÊXTEIS',icon:'right', style1: StylesCategoria.text2,icon2:'tshirt-crew',style2: StylesCategoria.icon1},
@@ -129,7 +129,7 @@ export default function Categoria2({navigation,route}) {
         
         <View key={item.id}> 
             <TouchableOpacity style={{backgroundColor:'#6CA5E4', width:'auto',height:56, borderRadius:10,margin:10}} onPress={() => handleItemPress(index)}>
-            <View style ={StylesCategoria.conteiner}>
+            <View style ={StylesCategoria.container}>
                <MaterialCommunityIcons style={item.style2} name={item.icon2} size={35} color="black" />
                <Text style = {item.style1}>{item.name}</Text>
                <AntDesign style={StylesCategoria.icon} name={item.icon} size={25} color="white" />

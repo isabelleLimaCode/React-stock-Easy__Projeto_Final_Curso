@@ -13,6 +13,7 @@ import StyleCardObj from '../../../Styles/StyleCardObj';
 import CardEncomenda from '../Card/CardEncomenda';
 import { db, auth} from '../../../Services/Firebaseconfig';
 import { doc, getDoc ,onSnapshot} from 'firebase/firestore';
+import { set } from 'firebase/database';
 
 export default function Vendas({navigation,route}) {
 
@@ -24,6 +25,8 @@ export default function Vendas({navigation,route}) {
   const[DadosEncomenda,setDadosEncomenda] = useState(route.params?.DadosEncomenda);
   const[DadosCliente,setDadosCliente] = useState(route.params?.DadosCliente);
   const[dataencomeda,,setdataencomenda] = useState(route.params?.datadaEncomenda);
+
+  const [Nvendas,setNvendas] = useState(false);
 
   
   useEffect(()=>{
@@ -41,9 +44,11 @@ export default function Vendas({navigation,route}) {
             setdata1(vendLista);
             console.log(vendLista);
             console.log(data1);
+            setNvendas(false);
           } else {
               console.log('Documento de vendas não encontrado');
               Alert.alert('Erro', 'Documento de vendas não encontrado');
+              setNvendas(true);
           }
       } catch (error) {
           console.error('Erro ao buscar vendas:', error);
@@ -151,17 +156,22 @@ const [filteredData2, setFilteredData2] = useState(data);
               />
             )}
           />
-        ) : ( <View  style={{marginBottom:150}}>
-              <Image style={{ width: 250, height: 250,marginBottom: 10,alignSelf: 'center',marginTop:200 }} source={require('./../../../assets/NaohaVendas.png')} />
-                      <Text style ={{
-                          textAlign:'center',
-                          fontWeight:'800',
-                          fontSize:20,
-                      }}>
-                      Ops! Não há Vendas
-                      </Text>
-            </View>)
-          }
+        ):null}
+
+          { Nvendas == true  && SelectSaida == 2? (
+                 <View style={{marginBottom:150}}>
+                  <Image style={{ width: 250, height: 250,alignSelf: 'center'}} source={require('./../../../assets/NaohaVendas.png')} />
+                          <Text style ={{
+                              textAlign:'center',
+                              fontWeight:'800',
+                              fontSize:20,
+                              marginTop:10
+                          }}>
+                          Ops! Não há Vendas
+                          </Text>
+                  </View>
+                ):null}
+
 
 
             {SelectSaida == 1 ?(
@@ -176,9 +186,10 @@ const [filteredData2, setFilteredData2] = useState(data);
                       onpress2={()=> navigation.navigate('visualizarEncomenda',{nEncomenda: item.value})}
                   /> 
                   )}
-                />
+                />):null}
 
-                ):( <View style={{marginBottom:150}}>
+                { Nvendas == true  && SelectSaida == 1? (
+                 <View style={{marginBottom:150}}>
                   <Image style={{ width: 250, height: 250,alignSelf: 'center'}} source={require('./../../../assets/NaohaVendas.png')} />
                           <Text style ={{
                               textAlign:'center',
@@ -188,7 +199,8 @@ const [filteredData2, setFilteredData2] = useState(data);
                           }}>
                           Ops! Não há Vendas
                           </Text>
-              </View>)} 
+                  </View>
+                ):null}
 
     </View>
   );
