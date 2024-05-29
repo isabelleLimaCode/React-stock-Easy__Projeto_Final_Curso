@@ -26,8 +26,10 @@ export default function PrepararEncomenda({ navigation, route }) {
     const [Modal5visibile, Setmodal5visibile] = useState(false);
     const [data1, setData1] = useState([]);
     const [checkedCount, setCheckedCount] = useState(0);
+    const [dadosvenda,Setdadosvenda] = useState([]);
 
     const { DadosEncomenda2 } = route.params;
+    const {nEncomenda1} = route.params;
 
     const fetchProdutos = async () => {
         try {
@@ -68,11 +70,54 @@ export default function PrepararEncomenda({ navigation, route }) {
     };
 
     const checkproduto = async () => {
+        if (DadosEncomenda2.length === 0) {
+            console.error('DadosEncomenda2 está vazio');
+            return;
+        }
+    
         if (checkedCount === DadosEncomenda2.length) {
             try {
                 const user = auth.currentUser;
+                if (!user) {
+                    console.error('Usuário não autenticado');
+                    Alert.alert('Erro', 'Usuário não autenticado');
+                    return;
+                }
+    
+             
+    
+                if (!nEncomenda1) {
+                    console.error('nEncomenda1 está indefinido');
+                    Alert.alert('Erro', 'Número da encomenda não está definido');
+                    return;
+                }
+    
+                // Referência correta ao documento no Firestore
                 const vendasRef = doc(db, user.uid, 'Vendas');
-                await updateDoc(vendasRef, { PrepararEncomenda: 'true' });
+    
+                // Obter o documento de vendas
+                const vendaData = await getDoc(vendasRef);
+                if (!vendaData.exists()) {
+                    console.error('Documento de vendas não encontrado');
+                    Alert.alert('Erro', 'Documento de vendas não encontrado');
+                    return;
+                }
+    
+                // Acessar a lista de vendas dentro do campo `Venda`
+                const vendas = vendaData.data().Venda || [];
+                const vendaIndex = vendas.findIndex(v => v.codVenda === nEncomenda1);
+                if (vendaIndex === -1) {
+                    console.error('Venda específica não encontrada');
+                    Alert.alert('Erro', 'Venda específica não encontrada');
+                    return;
+                }
+    
+                // Atualizar a propriedade `PrepararEncomenda` para `true`
+                vendas[vendaIndex].PrepararEncomenda = true;
+    
+                // Atualizar o documento no Firestore
+                await updateDoc(vendasRef, { Venda: vendas });
+    
                 navigation.navigate('FinalizarEncomenda');
             } catch (error) {
                 console.error('Erro ao atualizar o documento:', error);
@@ -82,10 +127,15 @@ export default function PrepararEncomenda({ navigation, route }) {
             Setmodal5visibile(true);
         }
     };
+    
+    
+    
+    
 
     useEffect(() => {
         console.log('checkedCount', checkedCount);
         console.log('dados', DadosEncomenda2);
+        console.log('vendas, ', nEncomenda1);
     }, [checkedCount]);
 
     return (
