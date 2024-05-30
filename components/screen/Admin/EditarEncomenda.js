@@ -117,10 +117,6 @@ export default function EditarEncomenda ({navigation, route}) {
 
                 <Text style={StylesEncomenda.text2}>Complete todas etapas para puder finalizar a encomenda</Text>
             </ScrollView>
-            <TouchableOpacity style={[stylemain.btn,{marginTop:100}]}>
-                    <Text style={stylemain.txt}>Criar Cliente </Text>
-                    <FontAwesome5 name="location-arrow" size={20} color="white" style={stylemain.seta} />
-        </TouchableOpacity>
         </KeyboardAvoidingView>
     );
 }
