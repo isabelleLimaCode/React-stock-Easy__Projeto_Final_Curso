@@ -35,7 +35,7 @@ export default function CardCliente({ nome, estado , onpress,navigation,icon,onP
           </View>
           <View style={{flexDirection:'row',left:190,top:-40}}>
           <TouchableOpacity onPress={onPress2}>
-            <Ionicons style={StyleCardCliente.icons} name="trash-sharp" size={24} color="black" />
+            <Ionicons style={StyleCardCliente.icons} name="trash-sharp" size={24} color="red" />
           </TouchableOpacity>
           <TouchableOpacity onPress={onpress}>
             <FontAwesome5 style={[StyleCardCliente.icons,{left:10,alignSelf:'flex-end'}]} name={ icon ?'plus':'pen'} size={24} color="black" />

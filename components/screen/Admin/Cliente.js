@@ -116,7 +116,7 @@ export default function Cliente({ navigation }) {
                     console.log('Navegando para editar cliente com índice:', index);
                     navigation.navigate('editcliente', { index });
                 }}
-                onPress2={() => confirmDelete(index,item)} // Chama a função de confirmação
+                onPress2={() => confirmDelete(index,item)} 
                 email={item.email}
             />
         )
