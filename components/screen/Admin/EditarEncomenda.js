@@ -18,7 +18,7 @@ import stylemain from '../../../Styles/Stylemain';
 
 export default function EditarEncomenda ({navigation, route}) {
     const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
-    const [isChecked, setChecked] = useState(false);
+    const [isChecked, setChecked] = useState(true);
     const [isChecked2, setChecked2] = useState(false);
     const [isChecked3, setChecked3] = useState(false);
     const [isChecked4, setChecked4] = useState(false);

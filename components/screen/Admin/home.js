@@ -104,34 +104,19 @@ export default function Home({ navigation }) {
     const produtosRef = doc(db, userId, 'produtos');
 
     const unsubscribe = onSnapshot(produtosRef, (produtosDoc) => {
-      try {
-        if (produtosDoc.exists()) {
-          const produtosData = produtosDoc.data();
-          const produtos = produtosData.produtos || [];
+      if (produtosDoc.exists()) {
+        const produtosData = produtosDoc.data();
+        const produtos = produtosData.produtos || [];
 
-          if (produtos.length === 0) {
-            console.log('Nenhum produto encontrado');
-            setData1([]);
-            setForaStock(true);
-            return;
-          }
+        const produtosForaDeStock = produtos.filter(p => Number(p.quantidade) === 0);
 
-          const produtoExistente = produtos.filter(p => Number(p.quantidade) === 0);
-          console.log('produtos fora de stock', produtoExistente);
-          setData1(produtoExistente);
-          console.log('data1', produtoExistente);
-          setForaStock(produtoExistente.length === 0);
-        } else {
-          console.log('Documento de produtos não encontrado');
-          setData1([]);
-          setForaStock(true);
-          Alert.alert('Erro', 'Documento de produtos não encontrado');
-        }
-      } catch (error) {
-        console.error('Erro ao buscar produtos:', error);
+        setData1(produtosForaDeStock);
+        setForaStock(produtosForaDeStock.length === 0);
+      } else {
+        console.log('Documento de produtos não encontrado');
         setData1([]);
         setForaStock(true);
-        Alert.alert('Erro', 'Erro ao buscar produtos');
+        Alert.alert('Erro', 'Documento de produtos não encontrado');
       }
     });
 
@@ -186,7 +171,7 @@ export default function Home({ navigation }) {
       {foraStock === false ? (
         <FlatList
           data={data1}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.codigoproduct}
           renderItem={({ item }) => (
             <CardProduto 
               valor={item.valorcompra}
@@ -195,7 +180,7 @@ export default function Home({ navigation }) {
               image={item.image}
               changeColor={'red'}
               changeshadowColor={'red'}
-              productId={item.id}
+              productId={item.codigoproduct}
             />
           )}
         />
