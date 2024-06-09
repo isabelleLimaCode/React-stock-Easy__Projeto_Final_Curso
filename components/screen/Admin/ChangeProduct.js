@@ -83,39 +83,6 @@ export default function ChangeProduct({ route, navigation }) {
         };
         fetchProduto();
     }, [index]);
-
-    const pickImageCamera = async () => {
-        try {
-          const { status } = await ImagePicker.requestCameraPermissionsAsync();
-          if (status !== 'granted') {
-            console.error('Permissão para acessar a câmera negada.');
-            return;
-          }
-    
-          const result = await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-          });
-    
-          if (!result.canceled) {
-            if (result.assets && result.assets.length > 0) {
-              const uri = result.assets[0].uri;
-              setselectImage(uri);
-              console.log(uri);
-              setChangeYesorNot(true);
-            } else {
-              console.error('Erro ao obter o URI da imagem selecionada.');
-            }
-          }
-    
-          Setmodal2visibile(!Modal2visibile);
-        } catch (error) {
-          console.error('Erro ao selecionar imagem:', error);
-        }
-      };
-
     const handleSave = async () => {
         try {
             const user = auth.currentUser;
@@ -165,6 +132,36 @@ export default function ChangeProduct({ route, navigation }) {
         setModal2visibile(!Modal2visibile);
       };
 
+      const pickImageCamera = async () => {
+        try {
+          const { status } = await ImagePicker.requestCameraPermissionsAsync();
+          if (status !== 'granted') {
+            console.error('Permissão para acessar a câmera negada.');
+            return;
+          }
+      
+          const result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+          });
+      
+          if (!result.canceled) {
+            if (result.assets && result.assets.length > 0) {
+              const uri = result.assets[0].uri;
+              setImage(uri);
+              console.log(uri);
+            } else {
+              console.error('Erro ao obter o URI da imagem selecionada.');
+            }
+          }
+          setModal2visibile(!Modal2visibile);
+        } catch (error) {
+          console.error('Erro ao selecionar imagem:', error);
+        }
+      };
+
     const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
 
     return (
@@ -198,6 +195,11 @@ export default function ChangeProduct({ route, navigation }) {
                                             style={StyleCreateAccount.conteinerbtn} 
                                             onPress={() => setModal2visibile(!Modal2visibile)}>
                                             <Text style={{ color: 'black' }}>Remover foto Atual</Text>
+                                        </Pressable>
+                                        <Pressable
+                                            style={[StyleCreateAccount.conteinerbtn, { marginTop: 10 }]} 
+                                            onPress={pickImageCamera}>
+                                            <Text style={{ color: 'black' }}>Tirar foto</Text>
                                         </Pressable>
                                         <Pressable
                                             style={[StyleCreateAccount.conteinerbtn, { marginTop: 10 }]} 

@@ -75,7 +75,7 @@ export default function Produto({ navigation }) {
             if (produtosDoc.exists()) {
                 const produtosData = produtosDoc.data();
                 const updatedProdutos = [...produtosData.produtos];
-                updatedProdutos.splice(index, 1); // Remove o produto pelo índice
+                updatedProdutos.splice(index, 1); 
 
                 await updateDoc(produtosRef, { produtos: updatedProdutos });
                 Alert.alert('Sucesso', 'Produto excluído com sucesso');
@@ -116,8 +116,8 @@ export default function Produto({ navigation }) {
                 nome={item.nome}
                 quant={item.quantidade}
                 image={item.image}
-                onpress2={() => navigation.navigate('EditarProduto', { index })} // Passa o índice para a tela de edição
-                onpressDelete={() => confirmDelete(index)} // Chama a função de confirmação de exclusão
+                onpress2={() => navigation.navigate('EditarProduto', { index })} 
+                onpressDelete={() => confirmDelete(index)} 
                 productId={item}
             />
         );
