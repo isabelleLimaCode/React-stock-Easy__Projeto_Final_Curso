@@ -12,7 +12,7 @@ import StyleCardObj from '../../../Styles/StyleCardObj';
 import { AntDesign ,FontAwesome5} from '@expo/vector-icons';
 import StylesEncomenda from '../../../Styles/StylesEncomenda';
 import Checkbox from 'expo-checkbox';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../../../Services/Firebaseconfig'; 
 import stylemain from '../../../Styles/Stylemain';
 
@@ -85,6 +85,74 @@ export default function EditarEncomenda ({navigation, route}) {
         }
     };
 
+    const finalizarEncomenda = async () => {
+        try {
+            const user = auth.currentUser;
+            if (!user) {
+                console.error('Usuário não autenticado');
+                Alert.alert('Erro', 'Usuário não autenticado');
+                return;
+            }
+
+            const vendasRef = doc(db, user.uid, 'Vendas');
+            const vendaData = await getDoc(vendasRef);
+
+            if (!vendaData.exists()) {
+                console.error('Documento de vendas não encontrado');
+                Alert.alert('Erro', 'Documento de vendas não encontrado');
+                return;
+            }
+
+            const vendas = vendaData.data().Venda || [];
+            const vendaIndex = vendas.findIndex(v => v.codVenda === nEncomenda);
+            if (vendaIndex === -1) {
+                console.error('Venda específica não encontrada');
+                Alert.alert('Erro', 'Venda específica não encontrada');
+                return;
+            }
+
+            const venda = { ...vendas[vendaIndex], estadoEnc: 'terminada' };
+
+            // Adicionar a venda à coleção vendasSaida
+            const vendasSaidaRef = doc(db, user.uid, 'vendasSaida');
+            const vendasSaidaData = await getDoc(vendasSaidaRef);
+            const vendasSaida = vendasSaidaData.exists() ? vendasSaidaData.data().Venda || [] : [];
+
+            vendasSaida.push(venda);
+            await setDoc(vendasSaidaRef, { Venda: vendasSaida });
+
+            // Remover a venda da coleção Vendas
+            vendas.splice(vendaIndex, 1);
+            await updateDoc(vendasRef, { Venda: vendas });
+
+            Alert.alert('Sucesso', 'Encomenda finalizada com sucesso');
+            navigation.goBack();
+        } catch (error) {
+            console.error('Erro ao finalizar encomenda:', error);
+            Alert.alert('Erro', 'Erro ao finalizar encomenda');
+        }
+    };
+
+    const confirmarFinalizacao = () => {
+        Alert.alert(
+            "Confirmar Finalização",
+            "Você tem certeza que deseja finalizar esta encomenda?",
+            [
+                {
+                    text: "Cancelar",
+                    onPress: () => console.log("Finalização cancelada"),
+                    style: "cancel"
+                },
+                { 
+                    text: "Finalizar", 
+                    onPress: () => finalizarEncomenda(),
+                    style: "destructive"
+                }
+            ],
+            { cancelable: false }
+        );
+    };
+
     return (
         <KeyboardAvoidingView behavior={behavior} style={{ flex: 1, backgroundColor: '#fff' }}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -109,12 +177,11 @@ export default function EditarEncomenda ({navigation, route}) {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={StylesEncomenda.btnContainer} onPress={() => navigation.navigate('confirmarPagamento',{ nEncomenda1: nEncomenda ,DadosEncomenda:DadosEncomenda})}>
-
                     <Text style={[StylesEncomenda.Text1, { marginBottom: 15, marginTop: 15 }]}>Confirmar pagamento</Text>
                     <Checkbox style={StylesEncomenda.stylebox} disabled value={isChecked3} onValueChange={setChecked3} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={StylesEncomenda.btnContainer} onPress={() => navigation.navigate('concluido')}>
+                <TouchableOpacity style={StylesEncomenda.btnContainer} onPress={confirmarFinalizacao}>
                     <Text style={[StylesEncomenda.Text1, { marginBottom: 15, marginTop: 15 }]}>Finalizar</Text>
                     <Checkbox style={StylesEncomenda.stylebox} disabled value={isChecked4} onValueChange={setChecked4} />
                 </TouchableOpacity>
