@@ -131,9 +131,9 @@ export default function Login({ navigation, route }) {
       </View>
       <ScrollView style={Stylemain.secondConteiner2}>
         <View>
-          <Text style={Stylemain.textinput}>E-mail: </Text>
+          <Text style={{color:'#fff',marginBottom:-30,marginLeft:20}}>E-mail: </Text>
           <TextInput style={Stylemain.input} placeholder="Exemplo@gmail.com" onChangeText={handlechangedataEmail} />
-          <Text style={Stylemain.textinput}>Password: </Text>
+          <Text style={{color:'#fff',top:35,marginLeft:20}}>Password: </Text>
           <TextInput secureTextEntry={!showPassword} style={Stylemain.input} onChangeText={handlechangedatapass} />
           <TouchableOpacity onPress={togglePasswordVisibility} style={Stylemain.eye}>
             <FontAwesome5 name={showPassword ? 'eye' : 'eye-slash'} size={20} color="black" />
@@ -146,7 +146,7 @@ export default function Login({ navigation, route }) {
               top: 10,
             }}>Esqueceu a sua Password? </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[Stylemain.btn, { top: 30 }]} onPress={checkdoc}>
+          <TouchableOpacity style={[Stylemain.btn, { top: 30}]} onPress={checkdoc}>
             <Text style={Stylemain.txt}>Iniciar Sessão</Text>
             <FontAwesome5 name="location-arrow" size={20} color="white" style={Stylemain.seta} />
           </TouchableOpacity>

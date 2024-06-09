@@ -13,7 +13,7 @@ import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../../Services/Firebaseconfig';
 import StyleCardStock from '../../../Styles/StyleCardStock';
 
-export default function Teste({ onpress2, valor, nome, quant, image, changeColor, changeshadowColor, productId }) {
+export default function Teste({ onpress2, valor, nome, quant, image, changeColor, changeshadowColor, productId ,onpressDelete}) {
     const [Changenumber, setChangenumber] = useState(quant);
     const previousChangenumberRef = useRef(quant);
 
@@ -109,10 +109,14 @@ export default function Teste({ onpress2, valor, nome, quant, image, changeColor
                         <TouchableOpacity onPress={handleIncrement} style={{ left: 15 }} onPressOut={handlePressOut}>
                             <Ionicons name="add-circle-sharp" size={26} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ left: 50 }} onPress={onpress2}>
+                        <TouchableOpacity style={{ left: 30 }} onPress={onpress2}>
                             <FontAwesome5 name="edit" size={24} color="black" />
                         </TouchableOpacity>
+                       
                     </View>
+                    <TouchableOpacity style={{top:-90,left:10}} onPress={onpressDelete}>
+                        <Ionicons name="trash-sharp" size={24} color="red" />
+                    </TouchableOpacity>
                 </View>
             </View>
         </KeyboardAvoidingView>

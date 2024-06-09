@@ -26,58 +26,59 @@ const { navigation} = props;
 
 
 
-useEffect(()=>{
-    const auth = getAuth(); 
+useEffect(() => {
+    const auth = getAuth();
     const user = auth.currentUser;
     const userRef = doc(db, user.uid, 'dados');
     const unsubscribe = onSnapshot(userRef, (produtosDoc) => {
-    const nomeuser = async () =>{
-        try {
-            if(auth.currentUser){
-             const userid = auth.currentUser.uid;
-             const userdocRef = doc(db,userid,'dados');
-             const userdocSnap = await getDoc(userdocRef);
-                if(userdocSnap.exists()){
-                    const userdata = userdocSnap.data();
-                    console.log(userdata);
-                    setnome(userdata.nome);
-                    setsobrenome(userdata.sobrenome);
-                    setphoto(userdata.uirphoto);
-                    console.log(photo);
-                }else {
-                    console.log('Documento do usuário não encontrado.');
+        const nomeuser = async () => {
+            try {
+                const currentUser = auth.currentUser;
+                if (currentUser) {
+                    const userid = currentUser.uid;
+                    const userdocRef = doc(db, userid, 'dados');
+                    const userdocSnap = await getDoc(userdocRef);
+                    if (userdocSnap.exists()) {
+                        const userdata = userdocSnap.data();
+                        console.log(userdata);
+                        setnome(userdata.nome);
+                        setsobrenome(userdata.sobrenome);
+                        setphoto(userdata.uirphoto);
+                        console.log(photo);
+                    } else {
+                        console.log('Documento do usuário não encontrado.');
+                    }
+                } else {
+                    console.log('Nenhum usuário logado.');
                 }
-            }else {
-                console.log('Nenhum usuário logado.');
-            } 
-        } catch (error) {
-            console.log('Erro ao puxar os documentos da coleção:', error);
-        }
-    }
-    nomeuser();
+            } catch (error) {
+                console.log('Erro ao puxar os documentos da coleção:', error);
+            }
+        };
+        nomeuser();
     });
     return () => unsubscribe();
-},[])
+}, []);
 
 const handleResetNavigation = async () => {
-    
     console.log('Usuário deslogado com sucesso.');
     setIsLoading(true);
     try {
-        await signOut(auth)
+        await signOut(auth);
         console.log('Usuário deslogado com sucesso.');
-      } catch (error) {
+    } catch (error) {
         console.log('Erro ao fazer logout do usuário:', error);
-      }
+    }
     setTimeout(() => {
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'Main' }]
+                routes: [{ name: 'Main' }],
             })
         );
     }, 3000);
 };
+
 
   return (
     <View style ={{flex:1}}>

@@ -38,6 +38,26 @@ export default function Main({navigation}) {
                 <Text style={Stylemain.txt}> Criar Conta </Text>
                 <FontAwesome5 name="location-arrow" size={20} color="white" style={Stylemain.seta} />
             </TouchableOpacity>
+
+            
+            <View style={{
+                justifyContent:'space-between',
+                flexDirection:'row',
+                top:100,
+                marginHorizontal:130,
+                marginTop:25,
+                right:40,
+                }}>
+                <TouchableOpacity style={{width:52,height:35}}>
+                <Image style= {[Stylemain.imag2,{}]} source={require('./../../../assets/bandeira_g.gif')}/>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{width:52,height:35}}>
+                <Image style= {[Stylemain.imag2,{}]} source={require('./../../../assets/bandeira_.png')}/>
+                </TouchableOpacity>
+              </View>
+           
+              
             </View>        
         
         </ScrollView>

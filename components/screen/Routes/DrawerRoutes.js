@@ -83,7 +83,7 @@ export function MyDrawer({ navigation, ...props }) {
           drawerLabel: 'Cliente',
         }}
       />
-      <Drawer.Screen
+     {/* <Drawer.Screen
         name="Marcketplace"
         component={Marckplace}
         options={{
@@ -92,7 +92,7 @@ export function MyDrawer({ navigation, ...props }) {
           ),
           drawerLabel: 'Marcketplace',
         }}
-      />
+      />*/}
       <Drawer.Screen
         name="Stock"
         component={Produto}
