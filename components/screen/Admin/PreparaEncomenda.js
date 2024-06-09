@@ -92,10 +92,9 @@ export default function PrepararEncomenda({ navigation, route }) {
                     return;
                 }
     
-                // Referência correta ao documento no Firestore
+            
                 const vendasRef = doc(db, user.uid, 'Vendas');
     
-                // Obter o documento de vendas
                 const vendaData = await getDoc(vendasRef);
                 if (!vendaData.exists()) {
                     console.error('Documento de vendas não encontrado');
@@ -103,7 +102,7 @@ export default function PrepararEncomenda({ navigation, route }) {
                     return;
                 }
     
-                // Acessar a lista de vendas dentro do campo `Venda`
+             
                 const vendas = vendaData.data().Venda || [];
                 const vendaIndex = vendas.findIndex(v => v.codVenda === nEncomenda1);
                 if (vendaIndex === -1) {
@@ -112,10 +111,10 @@ export default function PrepararEncomenda({ navigation, route }) {
                     return;
                 }
     
-                // Atualizar a propriedade `PrepararEncomenda` para `true`
+               
                 vendas[vendaIndex].PrepararEncomenda = true;
     
-                // Atualizar o documento no Firestore
+              
                 await updateDoc(vendasRef, { Venda: vendas });
     
                 navigation.navigate('FinalizarEncomenda');

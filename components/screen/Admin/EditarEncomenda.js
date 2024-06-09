@@ -76,6 +76,9 @@ export default function EditarEncomenda ({navigation, route}) {
                 setChecked(true);
                 setChecked2(true);
             }
+            if (venda.estadopagamento) {
+                setChecked3(true);
+            }
         } catch (error) {
             console.error('Erro ao buscar documento:', error);
             Alert.alert('Erro', 'Erro ao buscar documento');
@@ -105,7 +108,8 @@ export default function EditarEncomenda ({navigation, route}) {
                     <Checkbox style={StylesEncomenda.stylebox} disabled value={isChecked2} onValueChange={setChecked2} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={StylesEncomenda.btnContainer} onPress={() => navigation.navigate('confirmarPagamento',{ nEncomenda1: nEncomenda1 ,DadosEncomenda:DadosEncomenda})}>
+                <TouchableOpacity style={StylesEncomenda.btnContainer} onPress={() => navigation.navigate('confirmarPagamento',{ nEncomenda1: nEncomenda ,DadosEncomenda:DadosEncomenda})}>
+
                     <Text style={[StylesEncomenda.Text1, { marginBottom: 15, marginTop: 15 }]}>Confirmar pagamento</Text>
                     <Checkbox style={StylesEncomenda.stylebox} disabled value={isChecked3} onValueChange={setChecked3} />
                 </TouchableOpacity>

@@ -16,7 +16,7 @@ import StyleDiscont from '../../../Styles/StyleDiscont';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../../Services/Firebaseconfig'; 
 
-export default function ConfirmarPagamento({navigation, route}) {
+export default function ConfirmarPagamento({ navigation, route }) {
 
     const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
     const { nEncomenda1 } = route.params;
@@ -36,6 +36,7 @@ export default function ConfirmarPagamento({navigation, route}) {
             }
 
             console.log('User ID:', user.uid);
+            console.log('Número da encomenda:', nEncomenda1);
 
             const vendasRef = doc(db, user.uid, 'Vendas');
             const vendaData = await getDoc(vendasRef);
@@ -48,10 +49,8 @@ export default function ConfirmarPagamento({navigation, route}) {
             console.log('Dados de vendas:', vendaData.data());
 
             const vendas = vendaData.data().Venda || [];
-            console.log('Lista de vendas:', vendas);
-            console.log('Número da encomenda:', nEncomenda1);
-
             const venda = vendas.find(v => String(v.codVenda) === String(nEncomenda1));
+
             console.log('Venda específica:', venda);
 
             if (venda && venda.estadopagamento) {
@@ -62,8 +61,7 @@ export default function ConfirmarPagamento({navigation, route}) {
         }
     };
 
-    const toogleSwitch = async () => {
-        setIsEnable(previousState => !previousState);
+    const toggleSwitch = async () => {
         try {
             const user = auth.currentUser;
             if (!user) {
@@ -86,10 +84,8 @@ export default function ConfirmarPagamento({navigation, route}) {
             console.log('Dados de vendas:', vendaData.data());
 
             const vendas = vendaData.data().Venda || [];
-            console.log('Lista de vendas:', vendas);
-            console.log('Número da encomenda:', nEncomenda1);
-
             const vendaIndex = vendas.findIndex(v => String(v.codVenda) === String(nEncomenda1));
+
             console.log('Índice da venda específica:', vendaIndex);
 
             if (vendaIndex === -1) {
@@ -97,9 +93,12 @@ export default function ConfirmarPagamento({navigation, route}) {
                 Alert.alert('Erro', 'Venda específica não encontrada');
                 return;
             }
+
             vendas[vendaIndex].estadopagamento = !isEnable;
             await updateDoc(vendasRef, { Venda: vendas });
 
+            setIsEnable(prevState => !prevState);
+            Alert.alert('Sucesso', 'Estado de pagamento atualizado com sucesso');
         } catch (error) {
             console.error('Erro ao atualizar documento:', error);
             Alert.alert('Erro', 'Erro ao atualizar documento');
@@ -122,7 +121,7 @@ export default function ConfirmarPagamento({navigation, route}) {
                         trackColor={{ false: '#FF6347', true: '#3CB371' }}
                         thumbColor={isEnable ? '#fff' : '#f4f3f4'}
                         ios_backgroundColor={'#FF6347'}
-                        onValueChange={toogleSwitch}
+                        onValueChange={toggleSwitch}
                         value={isEnable}
                         style={StyleDiscont.Switchstyle}
                     />
