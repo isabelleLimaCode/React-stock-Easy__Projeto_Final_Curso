@@ -238,7 +238,7 @@ export default function Estatistica() {
                                 key={index}
                                 color={getRandomColor()}
                                 label={`Encomenda nº${venda.codVenda}`}
-                                value={`${venda.produtos.reduce((sum, prod) => sum + parseFloat(prod.valorvenda), 0)}€`}
+                                value={`${venda.produtos.reduce((sum, prod) => sum + parseFloat(prod.valorvenda), 0)}`}
                             />
                         ))}
                     </View>
