@@ -5,7 +5,7 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import StyleCardEncomenda from '../../../Styles/StyleCardEncomenda';
-export default function CardRelatorio({nEncomenda}) {
+export default function CardRelatorio({nEncomenda,onpress1}) {
 
   return (
        <View style={[StyleCardEncomenda.conteiner,{width:362,height:54}]}>
@@ -20,7 +20,7 @@ export default function CardRelatorio({nEncomenda}) {
                 marginLeft:10,
                 marginTop:10,
                 right:4
-                }}>
+                }} onPress={onpress1}>
                         <Text style={StyleCardEncomenda.text2}>Visualizar</Text>
             </TouchableOpacity>
         </View>

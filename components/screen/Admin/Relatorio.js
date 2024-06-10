@@ -9,126 +9,193 @@ import {
     ScrollView,
     FlatList,
     RefreshControl,
-    Platform
+    Platform,
+    Alert,
+    ActivityIndicator,
+    StyleSheet
 } from 'react-native';
 import StyleNewProduct from '../../../Styles/StyleNewProduct';
 import SearchBar from '../SearchBar/SearchBar';
 import StyleCardObj from '../../../Styles/StyleCardObj';
 import { AntDesign } from '@expo/vector-icons';
 import CardRelatorio from '../Card/CardRelatorio';
-export default function Relatorio({navigation}) {
+import { db, auth } from '../../../Services/Firebaseconfig';
+import { collection, getDocs } from 'firebase/firestore';
+import * as Print from 'expo-print';
+import { shareAsync } from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
+
+export default function Relatorio({ navigation }) {
     const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
 
+    // Search bar
+    const [Donthave, setDonthave] = useState(false);
+    const [clicked, setClicked] = useState(false);
+    const [searchPhrase, setSearchPhrase] = useState("");
+    const [refreshing, setRefreshing] = useState(false);
+    const [relatorios, setRelatorios] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [isSharing, setIsSharing] = useState(false);
 
-  //searchbar
-  const [Donthave , setDonthave] = useState(false);
-  const [clicked, setClicked] = useState(false);
-  const [searchPhrase, setSearchPhrasse] = useState("");
-  const [refreshing, setRefreshing] = React.useState();
+    useEffect(() => {
+        fetchRelatorios();
+    }, []);
 
+    const fetchRelatorios = async () => {
+        try {
+            const user = auth.currentUser;
+            const relatoriosRef = collection(db, user.uid, 'Relatorio', 'RelatoriosGerados');
+            const querySnapshot = await getDocs(relatoriosRef);
+            const relatoriosList = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setRelatorios(relatoriosList);
+            setFilteredData(relatoriosList);
+            setDonthave(relatoriosList.length === 0);
+        } catch (error) {
+            console.error('Erro ao buscar relatórios:', error);
+            Alert.alert('Erro', 'Erro ao buscar relatórios');
+        }
+    };
 
-  const data = [
-    {key: 1 , numero: '12896'},
-    {key: 2 , numero: '12888'},
-    {key: 3 , numero: '12888'}
-  ];
-  const [filteredData, setFilteredData] = useState(data);
-  
-  const onRefresh = React.useCallback(async () => {
-    setRefreshing(true);
-    
-    setTimeout(() => {
-      setDonthave((prevDonthave) => !prevDonthave);
-      setRefreshing(false);
-    }, 2000);
-  }, []);
-  
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await fetchRelatorios();
+        setRefreshing(false);
+    };
 
-  const renderitem = ({item}) =>{
-    return (
-    <CardRelatorio nEncomenda={item.numero}/>
-    )
-  }
-  const handleSearch = (text) => {
-    setSearchPhrasse(text);
-    
-    const filtered = data.filter((item) =>
-      item.numero.toString().startsWith(text.trim())
+    const handleViewPDF = async (pdfUri) => {
+        setLoading(true);
+        try {
+            const uri = await FileSystem.getContentUriAsync(pdfUri);
+            await Print.printAsync({ uri });
+        } catch (error) {
+            Alert.alert('Erro', 'PDF não disponível para visualização.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSharePDF = async (pdfUri) => {
+        setIsSharing(true);
+        try {
+            await shareAsync(pdfUri);
+        } catch (error) {
+            Alert.alert('Erro', 'Erro ao compartilhar o PDF');
+        } finally {
+            setIsSharing(false);
+        }
+    };
+
+    const renderItem = ({ item }) => (
+        <TouchableOpacity onPress={() => handleViewPDF(item.pdfUri)}>
+            <CardRelatorio 
+                nEncomenda={item.venda.codVenda} 
+                onpress1={() => handleSharePDF(item.pdfUri)} 
+            />
+        </TouchableOpacity>
     );
-    
-    setFilteredData(filtered);
-  };
 
-  
-  
+    const handleSearch = (text) => {
+        setSearchPhrase(text);
+        const filtered = relatorios.filter((item) =>
+            item.venda.codVenda.toString().startsWith(text.trim())
+        );
+        setFilteredData(filtered);
+    };
 
-  return (
-    <KeyboardAvoidingView behavior={behavior} style={{ flex: 1, backgroundColor:'#fff' }}>
-    
-    <View>
+    return (
+        <KeyboardAvoidingView behavior={behavior} style={{ flex: 1, backgroundColor: '#fff' }}>
+            <View>
                 <Text style={StyleCardObj.text2}> Relatório </Text>
-    </View>
-         
-             <SafeAreaView style={StyleCardObj.root}>
+            </View>
+            
+            <SafeAreaView style={StyleCardObj.root}>
                 <SearchBar
-                searchPhrase={searchPhrase}
-                setSearchPhrase={handleSearch}
-                clicked={clicked}
-                setClicked={setClicked} />
+                    searchPhrase={searchPhrase}
+                    setSearchPhrase={handleSearch}
+                    clicked={clicked}
+                    setClicked={setClicked}
+                />
             </SafeAreaView>
-         
-        
-            {Donthave == true ? (
-               <ScrollView style={{backgroundColor:'#fff',marginTop:10}}
-               refreshControl={
-                  <RefreshControl
-                      style={{position:'absolute',alignSelf:'center', color:'#059669'}}
-                      refreshing={refreshing}
-                      onRefresh={onRefresh}
-                  />
-              }
-          >
-                <View>
-                     <Image style={{ 
-                        width: 250, 
-                        height: 250,
-                        alignSelf:'center',
-                        marginTop:50
-                    }} 
-                        source={require('./../../../assets/Data.gif')} />
+
+            {Donthave ? (
+                <ScrollView
+                    style={{ backgroundColor: '#fff', marginTop: 10 }}
+                    refreshControl={
+                        <RefreshControl
+                            style={{ position: 'absolute', alignSelf: 'center', color: '#059669' }}
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                >
+                    <View>
+                        <Image 
+                            style={{ 
+                                width: 250, 
+                                height: 250,
+                                alignSelf: 'center',
+                                marginTop: 50
+                            }} 
+                            source={require('./../../../assets/Data.gif')} 
+                        />
                         <Text style={{
-                            textAlign:'center',
-                            fontWeight:'bold',
-                            fontSize:20,
-                            marginTop:30
+                            textAlign: 'center',
+                            fontWeight: 'bold',
+                            fontSize: 20,
+                            marginTop: 30
                         }}>Ops! Não há relatórios</Text>
-                </View>
+                    </View>
                 </ScrollView>
             ) : (
-               <View>
                 <FlatList
-                    data={filteredData.length === 0 ? data : filteredData}
-                    keyExtractor={(item) => item.key.toString()}
-                    renderItem={renderitem}
+                    data={filteredData.length === 0 ? relatorios : filteredData}
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderItem}
                     refreshControl={
-                      <RefreshControl
-                          style={{position:'absolute',alignSelf:'center', color:'#059669'}}
-                          refreshing={refreshing}
-                          onRefresh={onRefresh}
-                      />
-                  }
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
                 />
+            )}
+
+            {loading && (
+                <View style={styles.loading}>
+                    <ActivityIndicator size="large" color="#0000ff" />
                 </View>
             )}
-    
-        <TouchableOpacity style={{alignItems:'center'}} onPress={() => navigation.navigate('CriarRelatorio')}>
-            <View style={[StyleCardObj.conteiner3,StyleNewProduct.buttonnew]}>
-            <Text style={[StyleNewProduct.text2,{marginHorizontal:85,top:2}]}>Adicionar Relatório</Text>
-            <AntDesign style={{top:-10, marginHorizontal:10,right:3,top:1,right:40}} name="pluscircle" size={24} color="black" />
-            </View>
-        </TouchableOpacity>
 
-
-    </KeyboardAvoidingView>
-  );
+            {isSharing && (
+                <View style={styles.loading}>
+                    <ActivityIndicator size="large" color="#0000ff" />
+                </View>
+            )}
+        
+            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('CriarRelatorio')}>
+                <View style={[StyleCardObj.conteiner3, StyleNewProduct.buttonnew]}>
+                    <Text style={[StyleNewProduct.text2, { marginHorizontal: 85, top: 2 }]}>Adicionar Relatório</Text>
+                    <AntDesign style={{ top: -10, marginHorizontal: 10, right: 3, top: 1, right: 40 }} name="pluscircle" size={24} color="black" />
+                </View>
+            </TouchableOpacity>
+        </KeyboardAvoidingView>
+    );
 }
+
+const styles = StyleSheet.create({
+    loading: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        zIndex: 1,
+    },
+});

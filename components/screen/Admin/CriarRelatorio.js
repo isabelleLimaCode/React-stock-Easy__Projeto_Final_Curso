@@ -15,19 +15,25 @@ import stylemain from '../../../Styles/Stylemain';
 import { AntDesign } from '@expo/vector-icons';
 import { CheckBox } from 'react-native-elements';
 import { db, auth } from '../../../Services/Firebaseconfig';
-import { collection, getDocs, addDoc, getDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDoc, doc, query, where, deleteDoc, getDocs } from 'firebase/firestore';
 import * as Print from 'expo-print';
 import { Picker } from '@react-native-picker/picker';
+import { printToFileAsync } from "expo-print";
+import * as Sharing from 'expo-sharing';
+import moment from 'moment';
+
 
 export default function CriarRelatorio({ navigation }) {
     const [isSelected, setSelection] = useState(false);
     const [isSelected2, setSelection2] = useState(false);
     const [vendasSaida, setVendasSaida] = useState([]);
     const [selectedVenda, setSelectedVenda] = useState(null);
+    const [empresa, setEmpresa] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         fetchVendasSaida();
+        fetchEmpresa();
     }, []);
 
     const fetchVendasSaida = async () => {
@@ -51,86 +57,252 @@ export default function CriarRelatorio({ navigation }) {
         }
     };
 
+    const fetchEmpresa = async () => {
+        try {
+            const user = auth.currentUser;
+            const dadosRef = doc(db, user.uid, 'dados');
+            const dadosDoc = await getDoc(dadosRef);
+            if (dadosDoc.exists()) {
+                const dadosData = dadosDoc.data();
+                setEmpresa(dadosData.empresa);
+            } else {
+                console.log('Documento de dados não encontrado');
+                Alert.alert('Erro', 'Documento de dados não encontrado');
+            }
+        } catch (error) {
+            console.error('Erro ao buscar dados da empresa:', error);
+            Alert.alert('Erro', 'Erro ao buscar dados da empresa');
+        }
+    };
+
     const createRelatorio = async () => {
         if (!selectedVenda) {
             Alert.alert('Erro', 'Por favor, selecione uma venda de saída.');
             return;
         }
-
+    
         const filters = {
             dadosCliente: isSelected,
             dadosProduto: isSelected2,
         };
-
+    
         const relatorioData = {
             venda: selectedVenda,
             filters,
+            createdAt: new Date() // Adicione createdAt aqui
         };
-
+    
         try {
-            const pdfUri = await generatePDF(relatorioData);
-            await saveRelatorioToFirestore(relatorioData, pdfUri);
-            await saveRelatorioToRelatorioVendas(relatorioData, pdfUri);
-            Alert.alert('Sucesso', 'Relatório criado com sucesso!', [
-                { text: 'OK', onPress: () => navigation.navigate('VisualizarPDF', { pdfUri }) }
-            ]);
+            const user = auth.currentUser;
+            const vendasRef = collection(db, `${user.uid}/Relatorio/RelatoriosGerados`);
+            const q = query(vendasRef, where("venda.codVenda", "==", selectedVenda.codVenda));
+            const querySnapshot = await getDocs(q);
+    
+            if (!querySnapshot.empty) {
+                Alert.alert(
+                    'Relatório Existente',
+                    'Um relatório para esta venda já existe. Deseja substituí-lo?',
+                    [
+                        {
+                            text: 'Cancelar',
+                            style: 'cancel',
+                        },
+                        {
+                            text: 'Substituir',
+                            onPress: async () => {
+                                try {
+                                    // Deletar o relatório existente
+                                    querySnapshot.forEach(async (doc) => {
+                                        await deleteDoc(doc.ref);
+                                    });
+    
+                                    // Criar novo relatório
+                                    const pdfUri = await generatePDF({...relatorioData, createdAt: new Date()});
+                                    if (pdfUri) {
+                                        await saveRelatorioToVendas(relatorioData, pdfUri);
+                                        await sharePDF(pdfUri);
+                                        Alert.alert('Sucesso', 'Relatório criado com sucesso!');
+                                    } else {
+                                        throw new Error('Erro ao gerar PDF');
+                                    }
+                                } catch (error) {
+                                    console.error('Erro ao substituir relatório:', error);
+                                    Alert.alert('Erro', 'Erro ao substituir relatório');
+                                }
+                            },
+                        },
+                    ],
+                    { cancelable: false }
+                );
+            } else {
+                const pdfUri = await generatePDF({...relatorioData, createdAt: new Date()});
+                if (pdfUri) {
+                    await saveRelatorioToVendas(relatorioData, pdfUri);
+                    await sharePDF(pdfUri);
+                    Alert.alert('Sucesso', 'Relatório criado com sucesso!');
+                } else {
+                    throw new Error('Erro ao gerar PDF');
+                }
+            }
         } catch (error) {
-            console.error('Erro ao criar PDF:', error);
-            Alert.alert('Erro', 'Erro ao criar o relatório em PDF');
+            console.error('Erro ao criar relatório:', error);
+            Alert.alert('Erro', 'Erro ao criar relatório');
         }
     };
+    
 
     const generatePDF = async (relatorioData) => {
-        const { venda, filters } = relatorioData;
-
+        const { venda, filters, createdAt } = relatorioData;
+    
+        const formatDate = (date) => {
+            if (!date) {
+                return 'Data inválida';
+            }
+            return moment(date).format('DD [de] MMMM [de] YYYY [às] HH:mm:ss');
+        };
+    
+        const getProdutosHtml = (produtos) => {
+            return produtos.map(produto => `
+                <tr>
+                    <td>${produto.quantidade}</td>
+                    <td>${produto.nome}</td>
+                    <td>${produto.valorvenda}</td>
+                    <td>${produto.quantidade * produto.valorvenda}</td>
+                </tr>
+            `).join('');
+        };
+    
+        const totalValor = venda.produtos.reduce((total, produto) => total + produto.quantidade * produto.valorvenda, 0);
+    
         const htmlContent = `
             <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                    h1 { color: #333; }
+                    h2 { color: #555; }
+                    p { line-height: 1.6; }
+                    .cliente, .produtos { margin-bottom: 20px; }
+                    .fatura {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+                    .fatura, .fatura th, .fatura td {
+                        border: 1px solid black;
+                    }
+                    .fatura th, .fatura td {
+                        padding: 15px;
+                        text-align: left;
+                    }
+                    .total {
+                        font-weight: bold;
+                        font-size: 18px;
+                    }
+                    .logo {
+                        border: 2px solid #000;
+                        border-radius: 10px;
+                        width: 150px;
+                        height: 150px;
+                    }
+                </style>
+            </head>
             <body>
-                <h1>Relatório de Venda: ${venda.codVenda}</h1>
-                <h2>Filtros Aplicados:</h2>
-                <p>Dados do Cliente: ${filters.dadosCliente ? 'Sim' : 'Não'}</p>
-                <p>Dados do Produto: ${filters.dadosProduto ? 'Sim' : 'Não'}</p>
+                <div>
+                    <img class="logo" src="https://firebasestorage.googleapis.com/v0/b/stock-easy-7eced.appspot.com/o/imgs%2FNavy%20Blue%20Minimalist%20Text%20Logo.png?alt=media&token=9a816e14-fdaf-4cfa-920c-54c4c9edd03d" alt="Logo" />
+                    <h1>Relatório</h1>
+                </div>
+                <table style="width: 100%; margin-top: 20px;">
+                    <tr>
+                        <td>DE</td>
+                        <td>
+                            ${empresa}
+                        </td>
+                        <td></td>
+                        <td>
+                            <strong>Relatório #</strong> ${venda.codVenda}
+                            <br>
+                            <strong>Data do Relatório:</strong> ${createdAt ? formatDate(createdAt) : 'Data inválida'}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>COBRAR A</td>
+                        <td>
+                            ${venda.nomeCliente}
+                            <br>
+                            ${venda.morada}
+                        </td>
+                        <td>ENVIAR PARA</td>
+                        <td>
+                            ${venda.nomeCliente}
+                            <br>
+                            ${venda.morada}
+                        </td>
+                    </tr>
+                </table>
+                <table class="fatura" style="width: 100%; margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>QTD</th>
+                            <th>DESCRIÇÃO</th>
+                            <th>PREÇO POR UNIDADE</th>
+                            <th>VALOR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${getProdutosHtml(venda.produtos)}
+                    </tbody>
+                </table>
+                <div style="margin-top: 20px;">
+                    <p class="total">TOTAL: ${totalValor.toFixed(2)} €</p>
+                </div>
             </body>
             </html>
         `;
-
-        const { uri } = await Print.printToFileAsync({ html: htmlContent });
-
-        return uri;
-    };
-
-    const saveRelatorioToFirestore = async (relatorioData, pdfUri) => {
+    
         try {
-            const user = auth.currentUser;
-            const relatoriosRef = collection(db, `users/${user.uid}/relatorios`);
-            await addDoc(relatoriosRef, {
-                ...relatorioData,
-                pdfUri,
-                createdAt: new Date()
-            });
+            const file = await printToFileAsync({ html: htmlContent, base64: false });
+            return file.uri;
         } catch (error) {
-            console.error('Erro ao salvar relatório no Firestore:', error);
-            Alert.alert('Erro', 'Erro ao salvar relatório no Firestore');
+            console.error('Erro ao gerar o PDF:', error);
+            return null;
         }
     };
+    
+    
 
-    const saveRelatorioToRelatorioVendas = async (relatorioData, pdfUri) => {
+    const saveRelatorioToVendas = async (relatorioData, pdfUri) => {
         try {
             const user = auth.currentUser;
-            const relatoriosVendasRef = collection(db, `users/${user.uid}/relatorioVendas`);
-            await addDoc(relatoriosVendasRef, {
+            const vendasRef = collection(db, `${user.uid}/Relatorio/RelatoriosGerados`);
+            await addDoc(vendasRef, {
                 ...relatorioData,
                 pdfUri,
-                createdAt: new Date()
+                createdAt: new Date(),
             });
         } catch (error) {
-            console.error('Erro ao salvar relatório na coleção relatorioVendas:', error);
-            Alert.alert('Erro', 'Erro ao salvar relatório na coleção relatorioVendas');
+            console.error('Erro ao salvar relatório na coleção Vendas:', error);
+            Alert.alert('Erro', 'Erro ao salvar relatório na coleção Vendas');
         }
+    };
+    
+    
+
+    const sharePDF = async (uri) => {
+        if (!(await Sharing.isAvailableAsync())) {
+            Alert.alert('Erro', 'O compartilhamento não está disponível nesta plataforma');
+            return;
+        }
+        await Sharing.shareAsync(uri);
     };
 
     const toggleModal = () => {
         setModalVisible(!modalVisible);
+    };
+
+    const handleVendaChange = (itemValue) => {
+        const selected = vendasSaida.find(v => v.codVenda === itemValue);
+        setSelectedVenda(selected);
+        toggleModal();
     };
 
     const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
@@ -174,10 +346,7 @@ export default function CriarRelatorio({ navigation }) {
                                 style={{ width: '100%' }}
                                 selectedValue={selectedVenda ? selectedVenda.codVenda : null}
                                 onValueChange={(itemValue, itemIndex) => {
-                                    const selected = vendasSaida.find(v => v.codVenda === itemValue);
-                                    setSelectedVenda(selected);
-                                    console.log('Venda selecionada:', selected);
-                                    toggleModal();
+                                    handleVendaChange(itemValue);
                                 }}>
                                 <Picker.Item label="Selecione uma venda" value={null} />
                                 {vendasSaida.map((venda, index) => (
