@@ -3,12 +3,12 @@ import {
     View,
     Text,
     KeyboardAvoidingView,
-    ScrollView,
     TouchableOpacity,
     Modal,
     Image,
     RefreshControl,
-    Platform
+    Platform,
+    FlatList
 } from 'react-native';
 import StyleCardObj from '../../../Styles/StyleCardObj';
 import CardEstatistica from '../Card/CardEstatistica';
@@ -26,6 +26,7 @@ export default function Estatistica() {
     const [donthavedata, setDonthavedata] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [vendasSaida, setVendasSaida] = useState([]);
+    const [barColors, setBarColors] = useState([]);
 
     const months = [
         'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -69,7 +70,9 @@ export default function Estatistica() {
                     const vendaMonth = months[parseInt(month, 10) - 1];
                     return vendaMonth === selectedMonth && year === selectedYear;
                 });
+                const distinctColors = generateDistinctColors(filteredVendas.length);
                 setVendasSaida(filteredVendas);
+                setBarColors(distinctColors);
                 setDonthavedata(filteredVendas.length === 0);
                 console.log('Vendas de saída:', filteredVendas);
             } else {
@@ -82,12 +85,23 @@ export default function Estatistica() {
         }
     };
 
-    const getRandomColor = () => {
-        const colors = ['#FF6347', '#4682B4', '#FFD700', '#ADFF2F', '#FF69B4', '#8A2BE2'];
-        return colors[Math.floor(Math.random() * colors.length)];
+    const generateDistinctColors = (numColors) => {
+        const baseColors = ['#FF6347', '#4682B4', '#FFD700', '#ADFF2F', '#FF69B4', '#8A2BE2'];
+        const colors = [];
+        for (let i = 0; i < numColors; i++) {
+            colors.push(baseColors[i % baseColors.length]);
+        }
+        return colors;
     };
 
     const behavior = Platform.OS === 'ios' ? 'padding' : 'height';
+
+    const renderLegendaItem = ({ item, index }) => (
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 15 }}>
+            <View style={{ width: 20, height: 20, backgroundColor: barColors[index], marginRight: 5 }} />
+            <Text>{`Venda ${item.codVenda}`}</Text>
+        </View>
+    );
 
     return (
         <KeyboardAvoidingView behavior={behavior} style={{ backgroundColor: '#fff', flex: 1 }}>
@@ -95,24 +109,16 @@ export default function Estatistica() {
                 <Text style={StyleCardObj.text2}>Balanço</Text>
             </View>
             
-            <ScrollView
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-                style={{ backgroundColor: '#fff' }}
-            >
+            <View style={{ flex: 1 }}>
                 <View style={{ marginBottom: 10 }}>
-                    <Text style={{fontWeight:'bold',top:10,marginLeft:20}}>Selecione um mês: </Text>
+                    <Text style={{ fontWeight: 'bold', top: 10, marginLeft: 20 }}>Selecione um mês: </Text>
                     <TouchableOpacity style={[stylemain.input, { top: 10 }]} onPress={toggleModal}>
                         <Text>{selectedMonth}</Text>
                     </TouchableOpacity>
                 </View>
-                
+
                 <View style={{ marginBottom: 10 }}>
-                    <Text style={{fontWeight:'bold',top:10,marginLeft:20}}>Selecione um ano: </Text>
+                    <Text style={{ fontWeight: 'bold', top: 10, marginLeft: 20 }}>Selecione um ano: </Text>
                     <TouchableOpacity style={[stylemain.input, { top: 10 }]} onPress={toggleModalYear}>
                         <Text>{selectedYear}</Text>
                     </TouchableOpacity>
@@ -191,59 +197,76 @@ export default function Estatistica() {
                 </Modal>
 
                 {donthavedata ? (
-                    <View style={{backgroundColor:'#fff'}}>
+                    <View style={{ backgroundColor: '#fff', flex: 1 }}>
                         <Image style={{ width: 250, height: 250, marginBottom: 10, alignSelf: 'center', marginTop: 100 }} source={require('./../../../assets/estatistica.png')} />
                         <Text style={{
                             textAlign: 'center',
                             fontWeight: '800',
                             fontSize: 20,
                         }}>
-                            Ops! Não há dados suficientes para Visualizar o balanço 
+                            Ops! Não há dados suficientes para Visualizar o balanço
                         </Text>
                     </View>
                 ) : (
-                    <View>
+                    <View style={{ flex: 1 }}>
                         <View
                             style={{
                                 backgroundColor: '#fff',
                                 paddingBottom: 20,
                                 borderRadius: 10,
-                                marginBottom: 30,
-                                width: 350,
+                                marginBottom: 10,
+                                width: '95%',
                                 alignSelf: 'center'
                             }}
                         >
                             <BarChart
-                                data={vendasSaida.map(venda => ({
+                                data={vendasSaida.map((venda, index) => ({
                                     value: venda.produtos.reduce((sum, prod) => sum + parseFloat(prod.valorvenda), 0),
                                     label: `Venda ${venda.codVenda}`,
-                                    frontColor: '#177AD5',
+                                    frontColor: barColors[index],
                                 }))}
-                                barWidth={20}
-                                spacing={20}
-                                roundedTop
-                                roundedBottom
-                                hideRules
-                                xAxisThickness={0}
-                                yAxisThickness={0}
-                                yAxisTextStyle={{ color: 'black' }}
+                                barWidth={30}
+                                spacing={10}
+                                roundedTop={false}
+                                roundedBottom={false}
+                                xAxisThickness={2}
+                                yAxisThickness={2}
+                                yAxisTextStyle={{ color: 'black', fontSize: 10 }}
                                 noOfSections={4}
-                                maxValue={100}
+                                maxValue={Math.max(...vendasSaida.map(venda => venda.produtos.reduce((sum, prod) => sum + parseFloat(prod.valorvenda), 0))) + 20}
                                 backgroundColor='#fff'
+                                showVerticalLines={false}
+                                xAxisLabelTextStyle={{ rotation: 45, fontSize: 10, yOffset: 10 }}
                             />
                         </View>
 
-                        {vendasSaida.map((venda, index) => (
-                            <CardEstatistica
-                                key={index}
-                                color={getRandomColor()}
-                                label={`Encomenda nº${venda.codVenda}`}
-                                value={`${venda.produtos.reduce((sum, prod) => sum + parseFloat(prod.valorvenda), 0)}`}
+                        <View style={{ marginHorizontal: 20, marginBottom: 10 }}>
+                            <FlatList
+                                data={vendasSaida}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={renderLegendaItem}
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
                             />
-                        ))}
+                        </View>
+
+                        <FlatList
+                            data={vendasSaida}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({ item, index }) => (
+                                <CardEstatistica
+                                    key={index}
+                                    color={barColors[index]}
+                                    label={`Encomenda nº${item.codVenda}`}
+                                    value={`${item.produtos.reduce((sum, prod) => sum + parseFloat(prod.valorvenda), 0)}`}
+                                />
+                            )}
+                            contentContainerStyle={{ paddingBottom: 20 }}
+                        />
                     </View>
                 )}
-            </ScrollView>
+            </View>
         </KeyboardAvoidingView>
     );
 }
