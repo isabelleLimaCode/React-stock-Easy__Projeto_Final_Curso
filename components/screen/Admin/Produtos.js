@@ -1,6 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { 
-    View, Text, TouchableOpacity, KeyboardAvoidingView, SafeAreaView, FlatList, Alert, RefreshControl 
+    View, 
+    Text, 
+    TouchableOpacity, 
+    KeyboardAvoidingView, 
+    SafeAreaView, 
+    FlatList, 
+    Alert, 
+    RefreshControl,
+    Image	
 } from 'react-native';
 import StyleCardObj from '../../../Styles/StyleCardObj';
 import SearchBar from '../SearchBar/SearchBar';
@@ -149,6 +157,15 @@ export default function Produto({ navigation }) {
                     }
                     renderItem={renderItem}
                 />
+                {data1.length < 0 && (
+                     <View style={{top:-60}}>
+                   
+                       <Image style={{ width: 250, height: 250,alignSelf: 'center',marginTop:150 }}  source={{ uri: "https://firebasestorage.googleapis.com/v0/b/stock-easy-7eced.appspot.com/o/imgs%2FBusiness%20crisis-rafiki.png?alt=media&token=e46cecee-a7e5-4ac8-b491-e4f968179c0d" }} />
+                       <Text style={{ alignSelf: 'center', top: -25, fontWeight: 'bold', marginTop:20 }}>Oh! Não tem produtos no stock!</Text>
+                       <Text style={{ alignSelf: 'center', top: -25, fontWeight: 'bold' }}>Compre novos produtos para atualizar teu stock!</Text>
+                    
+                   </View>
+                )}
                 <TouchableOpacity style={{ padding: 20 }} onPress={() => navigation.navigate('CriarProduto')}>
                     <View style={[StyleCardObj.conteiner3, StyleNewProduct.buttonnew, { marginBottom: 20 }]}>
                         <Text style={[StyleNewProduct.text2, { marginHorizontal: 85, top: 1 }]}>Criar Produto</Text>

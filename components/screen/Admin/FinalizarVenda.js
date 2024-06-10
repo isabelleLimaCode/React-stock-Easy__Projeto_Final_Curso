@@ -93,7 +93,7 @@ export default function FinalizarVenda({ navigation, route }) {
             if (produtosDoc.exists()) {
                 const produtosData = produtosDoc.data().produtos || [];
                 const updatedProdutos = produtosData.map(produto => {
-                    const produtoVendido = passadataProduto.find(item => item.codigoproduct === produto.codigoproduct);
+                    const produtoVendido = passadataProduto.find(item => item.codigodebarras === produto.codigodebarras);
                     if (produtoVendido) {
                         return {
                             ...produto,

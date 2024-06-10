@@ -13,15 +13,10 @@ import { getDoc, doc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../../Services/Firebaseconfig';
 import StyleCardStock from '../../../Styles/StyleCardStock';
 
-export default function Teste({ onpress2, valor, nome, quant, image, changeColor, changeshadowColor, productId ,onpressDelete}) {
+export default function Teste({ onpress2, valor, nome, quant, image, changeColor, changeshadowColor, productId, onpressDelete }) {
     const [Changenumber, setChangenumber] = useState(quant);
-    const previousChangenumberRef = useRef(quant);
 
-    useEffect(() => {
-        previousChangenumberRef.current = Changenumber;
-    }, [Changenumber]);
-
-    const updateItemQuantity = async (productId, newQuantity) => {
+    const updateItemQuantity = async (newQuantity) => {
         const userId = auth.currentUser.uid;
         const userRef = doc(db, userId, 'produtos');
 
@@ -32,7 +27,7 @@ export default function Teste({ onpress2, valor, nome, quant, image, changeColor
             if (userDoc.exists()) {
                 const produtos = userDoc.data().produtos || [];
                 const updatedProdutos = produtos.map(produto => {
-                    if (produto.nome === productId.nome) {
+                    if (produto.codigodebarras.trim() === productId.trim()) {
                         return { ...produto, quantidade: newQuantity };
                     }
                     return produto;
@@ -69,9 +64,9 @@ export default function Teste({ onpress2, valor, nome, quant, image, changeColor
                 {
                     text: 'Sim',
                     onPress: async () => {
-                        await updateItemQuantity(productId, previousChangenumberRef.current);
+                        await updateItemQuantity(Changenumber);
                         await new Promise((resolve) => {
-                          setTimeout(resolve, 500); 
+                            setTimeout(resolve, 500);
                         });
                         Alert.alert('Alteração feita com sucesso!');
                     }
@@ -112,9 +107,8 @@ export default function Teste({ onpress2, valor, nome, quant, image, changeColor
                         <TouchableOpacity style={{ left: 30 }} onPress={onpress2}>
                             <FontAwesome5 name="edit" size={24} color="black" />
                         </TouchableOpacity>
-                       
                     </View>
-                    <TouchableOpacity style={{top:-90,left:10}} onPress={onpressDelete}>
+                    <TouchableOpacity style={{ top: -90, left: 10 }} onPress={onpressDelete}>
                         <Ionicons name="trash-sharp" size={24} color="red" />
                     </TouchableOpacity>
                 </View>

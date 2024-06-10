@@ -171,7 +171,7 @@ export default function Home({ navigation }) {
       {foraStock === false ? (
         <FlatList
           data={data1}
-          keyExtractor={(item) => item.codigoproduct}
+          keyExtractor={(item) => item.codigodebarras}
           renderItem={({ item }) => (
             <CardProduto 
               valor={item.valorcompra}
@@ -180,7 +180,7 @@ export default function Home({ navigation }) {
               image={item.image}
               changeColor={'red'}
               changeshadowColor={'red'}
-              productId={item.codigoproduct}
+              productId={item.codigodebarras}
             />
           )}
         />

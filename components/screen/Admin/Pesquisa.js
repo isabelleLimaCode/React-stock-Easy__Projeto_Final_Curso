@@ -74,7 +74,7 @@ export default function Pesquisa({ navigation }) {
             </SafeAreaView>
             <FlatList
                 data={filteredData}
-                keyExtractor={(item) => item.codigoproduct}
+                keyExtractor={(item) => item.codigodebarras}
                 renderItem={({ item }) => (
                     <CardProduto
                         valor={item.valordevenda}
