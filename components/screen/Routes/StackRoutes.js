@@ -34,7 +34,6 @@ import Header from '../Admin/Header';
 import Discont from '../Admin/Discont';
 import FinalizarVenda from '../Admin/FinalizarVenda';
 import Objetivos from '../Admin/Objetivos';
-import VisualizarRelatorio from '../Admin/VisualizarRelatorio';
 
 const Stack = createStackNavigator();
 
@@ -201,11 +200,7 @@ export function RoutesStack() {
         component={Promocao}
         options={{ header: (props) => <Header {...props} /> }}
       />
-       <Stack.Screen
-        name="VisualizarRelatorio"
-        component={VisualizarRelatorio}
-        options={{ header: (props) => <Header {...props} /> }}
-      />
+
     </Stack.Navigator>
   );
 }
