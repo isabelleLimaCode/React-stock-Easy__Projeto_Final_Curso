@@ -44,6 +44,7 @@ const AtalhoBanco = ({navigation}) => {
     setselectTelemovel(text);
     
   }
+ 
   const deepLink = ()=>{
     if (selectedBanco == 'Caixa Geral de Depósitos (CGD)'){
       const appStoreURL = 'https://apps.apple.com/pt/app/caixadirecta/id1369089471';
@@ -90,17 +91,11 @@ const AtalhoBanco = ({navigation}) => {
   return ( 
     <View style={{backgroundColor:'#FFF',flex:1}}>
       <Image
-                style={{ width: 200, height: 200, resizeMode: "contain", alignSelf: 'center', top: 20}}
+                style={{ width: 300, height: 300, resizeMode: "contain", alignSelf: 'center', top: 20,marginBottom:20}}
                 source={{
-                    uri: "https://seeklogo.com/images/M/mbway-logo-2CD6980569-seeklogo.com.png",
+                    uri: "https://firebasestorage.googleapis.com/v0/b/stock-easy-7eced.appspot.com/o/imgs%2FCredit%20card-bro.png?alt=media&token=bf8a5bfd-6eac-4ec2-acb9-a486ca9ad56b",
                 }}
             />
-      <TouchableOpacity style={{alignItems:'center',marginTop:20}} onPress={()=>setModalVisible2(!modalVisible2)}>
-            <View style={[StyleCardObj.conteiner3,StyleNewProduct.buttonnew]} >
-            <Text style={[StyleNewProduct.text2,{marginHorizontal:100,top:2}]}>Criar notificação</Text>
-            <Entypo style={{top:-10, marginHorizontal:10,right:3,top:1,right:40}} name="paper-plane" size={24} color="black" />
-            </View>
-        </TouchableOpacity> 
 
         <TouchableOpacity style={{alignItems:'center',top:-20}} onPress={toggleModal} >
             <View style={[StyleCardObj.conteiner3,StyleNewProduct.buttonnew]}>
