@@ -88,10 +88,10 @@ export default StyleSheet.create({
     },
 
     logo: {
-        width:350,
-       height:350,
+        width:300,
+       height:300,
        alignSelf:'center',
-       left:-15
+       top:10
     },
 
     imag7:{

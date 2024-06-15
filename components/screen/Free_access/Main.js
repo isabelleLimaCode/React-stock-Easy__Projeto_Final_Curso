@@ -58,7 +58,13 @@ export default function Main({navigation}) {
               </View>
            
               
-            </View>        
+            </View>   
+            <Image style={{
+            width:320,
+            height:120,
+            alignSelf:'center',
+            marginTop:100,
+          }} source={require('./../../../assets/ipb.png')} />     
         
         </ScrollView>
    
