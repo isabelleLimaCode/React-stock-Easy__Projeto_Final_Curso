@@ -172,7 +172,7 @@ export default function FinalizarVenda({ navigation, route }) {
     };
 
     return (
-        <View style={{ backgroundColor: '#fff', flex: 1 }}>
+        <View style={{ backgroundColor: '#fff', flex: 1}}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
                 <AntDesign style={{ left: 10, top: 10 }} name="back" size={24} color="black" />
             </TouchableOpacity>

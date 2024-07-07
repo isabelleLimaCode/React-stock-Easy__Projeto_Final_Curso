@@ -141,7 +141,7 @@ export default function CriarVenda({navigation,route}) {
     }else if(basededados.length  > 0 ){
       Alert.alert(
         'Atenção',
-        'Já existe um cliente ! para alterar delete o atual',
+        'Já existe um cliente! para alterar delete o atual',
         [
           {
             text: 'OK',

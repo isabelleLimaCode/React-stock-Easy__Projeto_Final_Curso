@@ -20,6 +20,8 @@ export default function Home({ navigation }) {
   const [image, setImage] = useState();
   const [numeroClientes, setNumeroClientes] = useState();
   const [numeroVendas, setNumeroVendas] = useState();
+  const [numeroFaturas, setNumeroFaturas] = useState();
+  const [numeroProdutos, setNumeroProdutos] = useState();
   const [data1, setData1] = useState([]);
   const [foraStock, setForaStock] = useState(false);
   const auth = getAuth(); 
@@ -55,6 +57,8 @@ export default function Home({ navigation }) {
       await countClientes(userId);
       await countVendas(userId);
       await fetchProdutos(userId);
+      await countFarturas(userId);
+      await countProdutos(userId);
     } catch (error) {
       console.log('Erro ao puxar os documentos da coleção:', error);
     }
@@ -97,6 +101,52 @@ export default function Home({ navigation }) {
       }
     } catch (error) {
       console.log('Erro ao puxar quantidade de vendas:', error);
+    }
+  };
+
+  const countFarturas = async (userId) => {
+    try {
+      const vendasRef = doc(db, userId, 'vendasSaida');
+      const vendasDoc = await getDoc(vendasRef);
+
+      if (vendasDoc.exists()) {
+        const vendasData = vendasDoc.data();
+
+        if (vendasData.Venda) {
+          const numVendas = vendasData.Venda.length;
+          setNumeroFaturas(numVendas);
+          console.log(numVendas);
+        } else {
+          console.log('O array de vendas terminadas está vazio');
+        }
+      } else {
+        console.log('Documento de vendas terminadas não encontrado');
+      }
+    } catch (error) {
+      console.log('Erro ao puxar quantidade de vendas terminadas:', error);
+    }
+  };
+
+  const countProdutos = async (userId) => {
+    try {
+      const ProdutosRef = doc(db, userId, 'produtos');
+      const ProdutosDoc = await getDoc(ProdutosRef);
+
+      if (ProdutosDoc.exists()) {
+        const ProdutoData = ProdutosDoc.data();
+
+        if (ProdutoData.produtos) {
+          const numProdutos = ProdutoData.produtos.length;
+          setNumeroProdutos(numProdutos);
+          console.log(numProdutos);
+        } else {
+          console.log('O array de produtos está vazio');
+        }
+      } else {
+        console.log('Documento de produtos não encontrado');
+      }
+    } catch (error) {
+      console.log('Erro ao puxar quantidade de produtos:', error);
     }
   };
 
@@ -143,7 +193,7 @@ export default function Home({ navigation }) {
             <FontAwesome style={[StyleHome.div2, { left: 15 }]} name="user-o" size={24} color="black" />
             <Text style={[StyleHome.icon2, { left: 15 }]}>{numeroClientes}</Text>
             <MaterialCommunityIcons style={[StyleHome.div2, { left: 130 }]} name="file-document" size={24} color="black" />
-            <Text style={[StyleHome.icon2, { left: 125 }]}>100</Text>
+            <Text style={[StyleHome.icon2, { left: 125 }]}>{numeroFaturas}</Text>
           </View>
         </View>
 
@@ -157,7 +207,7 @@ export default function Home({ navigation }) {
             <Feather style={[StyleHome.div2, { left: 15 }]} name="shopping-bag" size={24} color="black" />
             <Text style={[StyleHome.icon2, { left: 15 }]}>{numeroVendas}</Text>
             <Fontisto style={[StyleHome.div2, { left: 100 }]} name="shopping-store" size={24} color="black" />
-            <Text style={[StyleHome.icon2, { left: 100 }]}>100</Text>
+            <Text style={[StyleHome.icon2, { left: 100 }]}>{numeroProdutos}</Text>
           </View>
         </View>
 

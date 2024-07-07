@@ -46,7 +46,7 @@ export function RoutesStack() {
         component={Main}
       />
       <Stack.Screen
-        options={{ headerShown: false }}
+        options={{ header: (props) => <Header {...props} /> }}
         name="FinalizarVenda"
         component={FinalizarVenda}
       />
