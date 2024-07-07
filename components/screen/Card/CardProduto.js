@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { 
     View,
     Text,
@@ -22,12 +22,13 @@ export default function Teste({ onpress2, valor, nome, quant, image, changeColor
 
         try {
             const userDoc = await getDoc(userRef);
-            console.log('PRODUTO ANTES:', productId);
+            console.log('PRODUTO ANTES:', productId, userDoc.data());
 
             if (userDoc.exists()) {
                 const produtos = userDoc.data().produtos || [];
                 const updatedProdutos = produtos.map(produto => {
                     if (produto.codigodebarras.trim() === productId.trim()) {
+                        console.log('Produto encontrado:', produto);
                         return { ...produto, quantidade: newQuantity };
                     }
                     return produto;
@@ -49,14 +50,16 @@ export default function Teste({ onpress2, valor, nome, quant, image, changeColor
     };
 
     const handleIncrement = () => {
-        setChangenumber(prev => prev + 1);
+        const newQuantity = Changenumber + 1;
+        confirmUpdate(newQuantity);
     };
 
     const handleDecrement = () => {
-        setChangenumber(prev => (prev > 0 ? prev - 1 : 0));
+        const newQuantity = Changenumber > 0 ? Changenumber - 1 : 0;
+        confirmUpdate(newQuantity);
     };
 
-    const handlePressOut = () => {
+    const confirmUpdate = (newQuantity) => {
         Alert.alert(
             'Alterar quantidade em stock',
             'Deseja realmente alterar?',
@@ -64,10 +67,8 @@ export default function Teste({ onpress2, valor, nome, quant, image, changeColor
                 {
                     text: 'Sim',
                     onPress: async () => {
-                        await updateItemQuantity(Changenumber);
-                        await new Promise((resolve) => {
-                            setTimeout(resolve, 500);
-                        });
+                        setChangenumber(newQuantity);
+                        await updateItemQuantity(newQuantity);
                         Alert.alert('Alteração feita com sucesso!');
                     }
                 },
@@ -98,10 +99,10 @@ export default function Teste({ onpress2, valor, nome, quant, image, changeColor
                                 setChangenumber(parsedNumber);
                             }}
                         />
-                        <TouchableOpacity onPress={handleDecrement} style={{ left: 10 }} onPressOut={handlePressOut}>
+                        <TouchableOpacity onPress={handleDecrement} style={{ left: 10 }}>
                             <Ionicons name="remove-circle" size={26} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={handleIncrement} style={{ left: 15 }} onPressOut={handlePressOut}>
+                        <TouchableOpacity onPress={handleIncrement} style={{ left: 15 }}>
                             <Ionicons name="add-circle-sharp" size={26} />
                         </TouchableOpacity>
                         <TouchableOpacity style={{ left: 30 }} onPress={onpress2}>

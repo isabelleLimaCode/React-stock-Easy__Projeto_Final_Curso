@@ -126,7 +126,7 @@ export default function Produto({ navigation }) {
                 image={item.image}
                 onpress2={() => navigation.navigate('EditarProduto', { index })} 
                 onpressDelete={() => confirmDelete(index)} 
-                productId={item}
+                productId={item.codigodebarras}
             />
         );
     };
