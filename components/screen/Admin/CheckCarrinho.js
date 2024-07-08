@@ -48,7 +48,6 @@ export default function CheckCarrinho({navigation,route}) {
           imagem={item.image}
           onpress1={() => additem2(item)}
           onpress2={()=> removeItem2(item.key)}
-        
         />
       );
     };
@@ -207,7 +206,8 @@ export default function CheckCarrinho({navigation,route}) {
                                         </View>
                                 </View>
                          {/*fim  Model alterar cupão */}
-
+    
   </KeyboardAvoidingView>
+  
   );
 }
