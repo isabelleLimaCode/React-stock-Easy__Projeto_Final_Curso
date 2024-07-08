@@ -11,9 +11,10 @@ import StyleCardEncomenda from '../../../Styles/StyleCardEncomenda';
 export default function CardEncomenda(props) {
 
   return (
-       <View style={StyleCardEncomenda.conteiner}>
+       <View style={[StyleCardEncomenda.conteiner,{height:100}]}>
             <Text style={StyleCardEncomenda.texttyp}>Encomenda nº{props.encomenda}</Text>
-            <View style={StyleCardEncomenda.conteiner2}>
+            <Text style={StyleCardEncomenda.texttyp}>Cliente: {props.nomeCliente}</Text>
+            <View style={[StyleCardEncomenda.conteiner2,{}]}>
                 <View style={StyleCardEncomenda.btn1}>
                         <Text style={StyleCardEncomenda.text2}>{props.estado}</Text>
                 </View>

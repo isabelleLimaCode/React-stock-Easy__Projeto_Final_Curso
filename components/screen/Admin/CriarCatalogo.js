@@ -81,7 +81,41 @@ export default function CriarCatalogo({navigation}) {
         Alert.alert('Error','Erro ao adicionar catalogo');
     }
 };
-  
+
+const deleteCatalog = async () => {
+  try {
+      const user = auth.currentUser;
+      const catalogoRef = doc(db, 'catalogo', user.uid);
+      const catalogoDoc = await getDoc(catalogoRef);
+
+      if (catalogoDoc.exists()) {
+          const catalogoData = catalogoDoc.data();
+          const catalogo = catalogoData.catalogo || [];
+
+          const catalogoExistente = catalogo.find(p => p.codigo === user.uid);
+
+          if (catalogoExistente) {
+             
+              await updateDoc(catalogoRef, {
+                  catalogo: catalogo.filter(p => p.codigo !== user.uid),
+              });
+              console.log('Catálogo excluído com sucesso');
+              Alert.alert('Sucesso', 'Catálogo excluído com sucesso');
+              setCatalogExists(false); 
+          } else {
+              console.log('Catálogo não encontrado na base de dados');
+              Alert.alert('Erro', 'Catálogo não encontrado na base de dados');
+          }
+      } else {
+          console.log('Documento de catálogo não encontrado');
+          Alert.alert('Erro', 'Documento de catálogo não encontrado');
+      }
+  } catch (error) {
+      console.error('Erro ao deletar catálogo:', error);
+      Alert.alert('Erro', 'Erro ao deletar catálogo');
+  }
+};
+
   
   const pickImage = async () => {
     try {
@@ -341,6 +375,7 @@ const createCatalog = async () => {
     }
 };
 
+
 const sharePDF = async (uri) => {
     if (!(await Sharing.isAvailableAsync())) {
         Alert.alert('Erro', 'O compartilhamento não está disponível nesta plataforma');
@@ -350,6 +385,32 @@ const sharePDF = async (uri) => {
 };
 
 
+const showAlertDelet = () =>
+  Alert.alert(
+    'Atualizar Conta',
+    'Tem certeza que deseja eliminar tua empresa da lista de catálogo?',
+    [
+      {
+        text: 'Não',
+        onPress: () => Alert.alert('Operação cancelada com sucesso!'),
+        style: 'cancel',
+      },
+      {
+        text: 'Sim',
+        onPress: () => {
+          deleteCatalog();
+          Alert.alert('Catálogo eliminado com sucesso!');
+         },
+        style: 'cancel',
+      },
+    
+    ],
+    {
+      cancelable: true,
+      onDismiss: () =>
+        Alert.alert('operação cancelada por ter selecionado área externa'),
+    },
+  );
 
 
 
@@ -382,7 +443,7 @@ const sharePDF = async (uri) => {
               <Text style={stylemain.txt}>Partilhar Catálogo</Text>
               <FontAwesome5 name="location-arrow" size={20} color="white" style={stylemain.seta} />
             </TouchableOpacity>
-            <TouchableOpacity style={[stylemain.btn, { marginTop: 10, backgroundColor:'#B22222' }]}>
+            <TouchableOpacity style={[stylemain.btn, { marginTop: 10, backgroundColor:'#B22222' }]} onPress={showAlertDelet}>
               <Text style={stylemain.txt}>Eliminar Catálogo</Text>
               <FontAwesome5 name="location-arrow" size={20} color="white" style={stylemain.seta} />
             </TouchableOpacity>

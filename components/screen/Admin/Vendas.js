@@ -152,6 +152,7 @@ export default function Vendas({ navigation, route }) {
             <CardEncomenda
               estado={item.estadoVenda}
               encomenda={item.codVenda}
+              nomeCliente={item.nomeCliente}
               onPress={() => navigation.navigate('EditarEncomenda', { nEncomenda: item.codVenda, DadosEncomenda: item.produtos, DadosCliente: item.nomeCliente, dataencomeda: item.datadaEncomenda })}
               onpress2={() => navigation.navigate('visualizarEncomenda', { nEncomenda: item.codVenda, DadosEncomenda: item.produtos, DadosCliente: item.nomeCliente, dataencomeda: item.datadaEncomenda })}
             />
@@ -181,6 +182,7 @@ export default function Vendas({ navigation, route }) {
             <CardEncomenda
               estado={item.estadoEnc}
               encomenda={item.codVenda}
+              nomeCliente={item.nomeCliente}
               onpress2={() => navigation.navigate('visualizarEncomenda', { nEncomenda: item.codVenda })}
             />
           )}
