@@ -34,10 +34,39 @@ export default function CheckCarrinho({navigation,route}) {
     const { passadata} = route.params;
     const { passadata2} = route.params;
     const {valorPagar} = route.params;
+    const [cupoeslist, setCupoesList] = useState([]);
     const [valorEntrega, setvalorEntrega] = useState(5);
     const formattedValorEntrega = valorEntrega.toFixed(2);
-    
 
+    
+    const fetchCupões = useCallback(() => {
+      const user = auth.currentUser;
+      if (!user) {
+          Alert.alert('Erro', 'Usuário não autenticado');
+          return;
+      }
+      const cupoesRef = doc(db, user.uid, 'cupões');
+
+      const unsubscribe = onSnapshot(cupoesRef, (docSnapshot) => {
+          if (docSnapshot.exists()) {
+              const cupoesData = docSnapshot.data();
+              const cupõesList = cupoesData.cupões || [];
+
+              setCupoesList(cupõesList);
+              setFilteredData(clientesList);
+              setdonthave(clientesList.length === 0);
+          } else {
+              console.log('Documento de clientes não encontrado');
+              Alert.alert('Erro', 'Documento de clientes não encontrado');
+              setdonthave(true);
+          }
+      }, (error) => {
+          console.error('Erro ao buscar clientes:', error);
+          Alert.alert('Erro', 'Erro ao buscar clientes');
+      });
+
+      return unsubscribe; 
+  }, []);
   
     const renderItem2 = ({ item }) => {
       return (

@@ -13,6 +13,7 @@ import Chat from '../Admin/Support';
 import Tabnav from './TabRoutes';
 import Header from '../Admin/Header';
 import Mainbar from '../Card/Mainbar';
+import HomeChatbot from '../Admin/HomeChatbot';
 
 const Drawer = createDrawerNavigator();
 
@@ -125,7 +126,7 @@ export function MyDrawer({ navigation, ...props }) {
       />
       <Drawer.Screen
         name="Suport"
-        component={Chat}
+        component={HomeChatbot}
         options={{
           drawerIcon: ({ color, size }) => (
             <AntDesign name="message1" size={size} color={color} />

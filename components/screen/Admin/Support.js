@@ -1,9 +1,10 @@
 import React, { useEffect, useCallback, useState, useLayoutEffect } from 'react';
-import { View } from 'react-native';
+import { View ,TouchableOpacity} from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { auth } from '../../../Services/Firebaseconfig';
 import { signOut } from 'firebase/auth';
 import { GiftedChat } from 'react-native-gifted-chat';
+import { FontAwesome5, AntDesign } from '@expo/vector-icons';
 
 const Chat = ({ navigation }) => {
     const [messages, setMessages] = useState([]);
@@ -49,7 +50,11 @@ const Chat = ({ navigation }) => {
     }, []);
     return (
       <View style={{flex:1,top:-20,backgroundColor:'#fff'}}>
-
+         <View>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <AntDesign style={{ left: 10 }} name="back" size={24} color="black" />
+                </TouchableOpacity>
+            </View>
         <GiftedChat
             messages={messages}
             showAvatarForEveryMessage={true}

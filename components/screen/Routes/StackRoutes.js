@@ -34,6 +34,7 @@ import Header from '../Admin/Header';
 import Discont from '../Admin/Discont';
 import FinalizarVenda from '../Admin/FinalizarVenda';
 import Objetivos from '../Admin/Objetivos';
+import Chat from '../Admin/Support';
 
 const Stack = createStackNavigator();
 
@@ -198,6 +199,11 @@ export function RoutesStack() {
       <Stack.Screen
         name="promoção"
         component={Promocao}
+        options={{ header: (props) => <Header {...props} /> }}
+      />
+      <Stack.Screen
+        name='chatboot'
+        component={Chat}
         options={{ header: (props) => <Header {...props} /> }}
       />
 

@@ -1,0 +1,37 @@
+export default FaceData=[
+    {
+        id:1,
+        name:'Pooj',
+        image:'https://res.cloudinary.com/dknvsbuyy/image/upload/v1685678135/chat_1_c7eda483e3.png',
+        colorface:'#FFC107',
+        secondary:''
+    },
+    {
+        id:2,
+        name:'Poo',
+        image:'https://res.cloudinary.com/dknvsbuyy/image/upload/v1685709886/image_21_2e18bb4a61.png',
+        colorface:'#E53057',
+        secondary:''
+    },
+    {
+        id:3,
+        name:'Mira',
+        image:'https://res.cloudinary.com/dknvsbuyy/image/upload/v1685709886/image_22_409561b953.png',
+        colorface:'#3B96D2',
+        secondary:''
+    },
+    {
+        id:4,
+        name:'Hiya',
+        image:'https://res.cloudinary.com/dknvsbuyy/image/upload/v1685709886/image_18_893d24cebc.png',
+        colorface:'#37474F',
+        secondary:''
+    },
+    {
+        id:5,
+        name:'Kev',
+        image:'https://res.cloudinary.com/dknvsbuyy/image/upload/v1685709886/image_23_211d7370cb.png',
+        colorface:'#2473FE',
+        secondary:''
+    },
+]
