@@ -13,7 +13,7 @@ import SearchBar from '../SearchBar/SearchBar';
 import StyleCardObj from '../../../Styles/StyleCardObj';
 import CardEncomenda from '../Card/CardEncomenda';
 import { db, auth } from '../../../Services/Firebaseconfig';
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot , updateDoc} from 'firebase/firestore';
 
 export default function Vendas({ navigation, route }) {
   const [SelectedButton, SetSelectedButton] = useState(1);
@@ -62,6 +62,52 @@ export default function Vendas({ navigation, route }) {
       Alert.alert('Erro', 'Erro ao buscar vendas');
     }
   };
+
+  const handleDelete = async (index) => {
+    console.log(index);
+    try {
+      const user = auth.currentUser;
+      const VendasRef = doc(db, user.uid, 'Vendas');
+      const VendasDoc = await getDoc(VendasRef);
+  
+      if (VendasDoc.exists()) {
+        const VendasData = VendasDoc.data();
+        const updatedVenda = [...VendasData.Venda];
+        updatedVenda.splice(index, 1); 
+        
+        await updateDoc(VendasRef, { Venda: updatedVenda }); 
+         Alert.alert('Sucesso', 'Venda excluída com sucesso');
+    
+      } else {
+        console.log('Documento de Vendas não encontrado');
+        Alert.alert('Erro', 'Documento de Vendas não encontrado');
+      }
+    } catch (error) {
+      console.error('Erro ao excluir venda:', error);
+      Alert.alert('Erro', 'Erro ao excluir venda');
+    }
+  };
+  
+
+const confirmDelete = (index,item) => {
+  Alert.alert(
+      "Excluir Cliente",
+      "Você tem certeza que deseja excluir o Venda " +" " +item.codVenda +" "+ " cliente " + item.nomeCliente + " " + "?",
+      [
+          {
+              text: "Cancelar",
+              onPress: () => console.log("Excluir cliente cancelado"),
+              style: "cancel"
+          },
+          { 
+              text: "Excluir", 
+              onPress: () => handleDelete(index),
+              style: "destructive"
+          }
+      ],
+      { cancelable: false }
+  );
+};
 
   const fetchVendasSaida = async () => {
     try {
@@ -112,6 +158,10 @@ export default function Vendas({ navigation, route }) {
     fetchProdutos();
   };
 
+  const alertam = () => {
+    Alert.alert('Ação não permitida', 'Você não pode excluir vendas de em estado finalizado');
+  };
+
   const btn2selecionado = () => {
     SetSelectedButton(2);
     SetSelectedEntrada(0);
@@ -143,18 +193,19 @@ export default function Vendas({ navigation, route }) {
           <Text style={[StyleVenda.buttonText, SelectedButton === 2 ? StyleVenda.selectedBtnbuttonText : null]}>Saída</Text>
         </TouchableOpacity>
       </View>
-
+      {/*item.codVenda.toString()*/}
       {SelectEntrada === 1 ? (
         <FlatList
           data={data1}
-          keyExtractor={(item) => item.codVenda.toString()}
-          renderItem={({ item }) => (
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item , index}) => (
             <CardEncomenda
               estado={item.estadoVenda}
               encomenda={item.codVenda}
               nomeCliente={item.nomeCliente}
               onPress={() => navigation.navigate('EditarEncomenda', { nEncomenda: item.codVenda, DadosEncomenda: item.produtos, DadosCliente: item.nomeCliente, dataencomeda: item.datadaEncomenda })}
               onpress2={() => navigation.navigate('visualizarEncomenda', { nEncomenda: item.codVenda, DadosEncomenda: item.produtos, DadosCliente: item.nomeCliente, dataencomeda: item.datadaEncomenda })}
+              onpress1={() => confirmDelete(index,item)}
             />
           )}
         />
@@ -183,7 +234,8 @@ export default function Vendas({ navigation, route }) {
               estado={item.estadoEnc}
               encomenda={item.codVenda}
               nomeCliente={item.nomeCliente}
-              onpress2={() => navigation.navigate('visualizarEncomenda', { nEncomenda: item.codVenda })}
+              onpress2={() => navigation.navigate('visualizarEncomenda', { nEncomenda: item.codVenda, DadosEncomenda: item.produtos, DadosCliente: item.nomeCliente, dataencomeda: item.datadaEncomenda })}
+              onpress1={() => alertam()}
             />
           )}
         />

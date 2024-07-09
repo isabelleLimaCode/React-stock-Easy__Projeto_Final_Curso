@@ -18,6 +18,17 @@ export default function CardEncomenda(props) {
                 <View style={StyleCardEncomenda.btn1}>
                         <Text style={StyleCardEncomenda.text2}>{props.estado}</Text>
                 </View>
+               
+                  <TouchableOpacity onPress={props.onpress1}>
+                    <FontAwesome
+                      style={{ alignSelf: 'center', top: 2 }}
+                      name="trash"
+                      size={26}
+                      color="red"
+                    />
+                  </TouchableOpacity>
+               
+               
               
                 <TouchableOpacity onPress={props.onpress2}>
                     <FontAwesome style={{right:9,top:2}} name="search" size={24} color="black" />

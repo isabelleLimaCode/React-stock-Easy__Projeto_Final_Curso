@@ -11,7 +11,8 @@ import StyleCardObj from '../../../Styles/StyleCardObj';
 import SearchBar from '../SearchBar/SearchBar';
 import CardProduto from '../Card/CardProduto';
 import { db, auth } from '../../../Services/Firebaseconfig';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+
 
 export default function Pesquisa({ navigation }) {
     const [searchPhrase, setSearchPhrase] = useState("");
@@ -56,6 +57,49 @@ export default function Pesquisa({ navigation }) {
         setFilteredData(filtered);
     };
 
+    const handleDelete = async (index) => {
+        try {
+            const user = auth.currentUser;
+            const produtosRef = doc(db, user.uid, 'produtos');
+            const produtosDoc = await getDoc(produtosRef);
+
+            if (produtosDoc.exists()) {
+                const produtosData = produtosDoc.data();
+                const updatedProdutos = [...produtosData.produtos];
+                updatedProdutos.splice(index, 1); 
+
+                await updateDoc(produtosRef, { produtos: updatedProdutos });
+                Alert.alert('Sucesso', 'Produto excluído com sucesso');
+            } else {
+                console.log('Documento de produtos não encontrado');
+                Alert.alert('Erro', 'Documento de produtos não encontrado');
+            }
+        } catch (error) {
+            console.error('Erro ao excluir produto:', error);
+            Alert.alert('Erro', 'Erro ao excluir produto');
+        }
+    };
+
+    const confirmDelete = (index) => {
+        Alert.alert(
+            "Confirmar Exclusão",
+            "Você tem certeza que deseja excluir este produto?",
+            [
+                {
+                    text: "Cancelar",
+                    onPress: () => console.log("Exclusão cancelada"),
+                    style: "cancel"
+                },
+                { 
+                    text: "Excluir", 
+                    onPress: () => handleDelete(index),
+                    style: "destructive"
+                }
+            ],
+            { cancelable: false }
+        );
+    };
+
     return (
         <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
             <View>
@@ -75,13 +119,14 @@ export default function Pesquisa({ navigation }) {
             <FlatList
                 data={filteredData}
                 keyExtractor={(item) => item.codigodebarras}
-                renderItem={({ item }) => (
+                renderItem={({ item , index}) => (
                     <CardProduto
                         valor={item.valordevenda}
                         nome={item.nome}
                         quant={item.quantidade}
                         image={item.image}
-                        onpress2={() => navigation.navigate('EditarProduto')}
+                        onpress2={() => navigation.navigate('EditarProduto', { index })} 
+                        onpressDelete={() => confirmDelete(index)} 
                     />
                 )}
             />
