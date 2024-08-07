@@ -11,3 +11,7 @@ um registo de controlo de todas as vendas. Em forma de resumo, com esta aplicaç
 pretendo criar uma ferramenta útil, fácil de utilizar e intuitiva no que toca à gestão do 
 stock. 
 
+
+
+https://github.com/user-attachments/assets/60469e46-d778-42b2-a855-4a236616d73d
+
