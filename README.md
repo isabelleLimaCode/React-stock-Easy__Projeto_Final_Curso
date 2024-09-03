@@ -1,3 +1,5 @@
+Projeto final de curso 
+
 Este protejo tem como finalidade o desenvolvimento de uma aplicação de gestão de 
 stock em React Native mais JavaScript e firebase, para atender às necessidades daqueles 
 que desejam organizar as suas vendas, e, ao mesmo tempo, minimizar os seus gastos e 
