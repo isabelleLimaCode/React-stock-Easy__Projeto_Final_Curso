@@ -22,7 +22,8 @@ import { Ionicons ,FontAwesome5, MaterialCommunityIcons,AntDesign} from '@expo/v
 import {db,auth} from '../../../Services/Firebaseconfig';
 import { arrayUnion, setDoc, doc, getDoc,updateDoc } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
-import { BarCodeScanner } from 'expo-barcode-scanner';
+//import { BarCodeScanner } from 'expo-barcode-scanner';
+import { Camera } from 'expo-camera';
 import CardScan from '../Card/CardScan';
 
 
@@ -327,10 +328,13 @@ export default function NewProduct({navigation,route}) {
                         }]}>
                             <Text style={{color:'#000',alignSelf:'center',fontSize:18,fontWeight:'bold',top:10}}>Scan</Text>
                             <View style={{top:-20, width:200,height:200,top:20}}>
-                                <BarCodeScanner
-                                    onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                                 <Camera
                                     style={StyleSheet.absoluteFillObject}
-                                />
+                                    onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                                    barCodeScannerSettings={{
+                                        barCodeTypes: ['qr', 'ean13', 'code128'], 
+                                    }}
+                            />
                                 <View style={{ top: 100 }}>
                                 {scanned && (
                                     <View>

@@ -13,7 +13,8 @@ import {
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import StyleCardObj from '../../../Styles/StyleCardObj';
 import StyleCreateAccount from '../../../Styles/StyleCreateAccount';
-import { BarCodeScanner } from 'expo-barcode-scanner';
+//import { BarCodeScanner } from 'expo-barcode-scanner';
+import { Camera } from 'expo-camera';
 
 const CardPreparar = ({ nome, uri, onCheckChange, DadosEncomenda2 }) => {
     const [Modal3visibile, Setmodal3visibile] = useState(false);
@@ -25,7 +26,7 @@ const CardPreparar = ({ nome, uri, onCheckChange, DadosEncomenda2 }) => {
 
     useEffect(() => {
         const getBarCodeScannerPermissions = async () => {
-            const { status } = await BarCodeScanner.requestPermissionsAsync();
+            const { status } = await Camera.requestCameraPermissionsAsync();
             setHasPermission(status === 'granted');
         };
         getBarCodeScannerPermissions();
@@ -94,10 +95,13 @@ const CardPreparar = ({ nome, uri, onCheckChange, DadosEncomenda2 }) => {
                         }]}>
                             <Text style={{ color: '#000', alignSelf: 'center', fontSize: 18, fontWeight: 'bold', top: 10 }}>Scan</Text>
                             <View style={{ top: -20, width: 200, height: 200, top: 20 }}>
-                                <BarCodeScanner
-                                    onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                            <Camera
                                     style={StyleSheet.absoluteFillObject}
-                                />
+                                    onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                                    barCodeScannerSettings={{
+                                        barCodeTypes: ['qr', 'ean13', 'code128'], 
+                                    }}
+                                /> 
                                 <View style={{ top: 100 }}>
                                     {scanned && (
                                         <View>

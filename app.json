@@ -2,7 +2,10 @@
   "expo": {
     "name": "StockEasy",
     "slug": "StockEasy",
-    "plugin":["@react-native-firebase/app","@react-native-firebase/auth"],
+    "plugin": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -31,6 +34,9 @@
       "eas": {
         "projectId": "7af9aed7-4b29-4e84-8fb1-ac596f5f0a36"
       }
-    }
+    },
+    "plugins": [
+      "expo-barcode-scanner"
+    ]
   }
 }
